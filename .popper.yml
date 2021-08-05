@@ -1,0 +1,13 @@
+steps:
+
+- id: measure
+  uses: "./evaluation/"
+  dir: "/usr/src/evaluation"
+  runs: ["sh"]
+  args: ["-c", "node index.js"]
+
+- id: analyze
+  uses: "docker://rocker/verse:4.2.2"
+  dir: "/workspace/evaluation"
+  runs: ["sh"]
+  args: ["-c", "R --vanilla < /workspace/evaluation/analysis.R; latexmk -pdflua -pvc- results/plot.tex; latexmk -pdflua -pvc- results/scaling.tex"]

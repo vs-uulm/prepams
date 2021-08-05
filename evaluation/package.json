@@ -1,0 +1,23 @@
+{
+  "name": "prepams-evaluation",
+  "version": "0.1.0",
+  "description": "Evaluation script for PrePaMS",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "cli-progress": "^3.11.2",
+    "csv-writer": "^1.6.0",
+    "express": "^4.18.1",
+    "html-webpack-plugin": "^5.5.0",
+    "jstat": "^1.9.5",
+    "prepams-shared": "file:./lib",
+    "prob.js": "^1.0.6",
+    "puppeteer": "^19.3.0",
+    "random-js": "^2.1.0",
+    "webpack": "^5.74.0"
+  }
+}
