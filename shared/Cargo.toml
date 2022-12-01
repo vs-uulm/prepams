@@ -1,0 +1,31 @@
+[package]
+name = "prepams-shared"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+opt-level = 3
+
+[profile.test]
+opt-level = 3
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+ff = "0.12"
+sha2 = "0.9"
+sha3 = "0.9.1"
+rand = "0.8.5"
+base64 = "0.13"
+byteorder = "1"
+group = "0.12.0"
+merlin = "3.0.0"
+rand_chacha = "0.3.1"
+miniz_oxide = "0.5.3"
+ed25519-zebra = "3.0.0"
+serde = { version = "1.0", features = ["derive"] }
+postcard = { version = "1.0.0", features = ["use-std"] }
+bls12_381 = { version = "0.7.0", features = ["experimental"] }
+wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }
+getrandom = { version = "0.2.6", features = ["js", "wasm-bindgen"] }
