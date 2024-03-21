@@ -1,267 +1,301 @@
 use std::collections::HashMap;
-use std::collections::HashSet;
 
+use bls12_381::Scalar;
 use wasm_bindgen::prelude::*;
-
-use group::Curve;
 use serde::{Serialize, Deserialize};
-use postcard::{from_bytes, to_stdvec};
+
+use ed25519_zebra::VerificationKey;
 use rand_chacha::ChaCha20Rng;
 use rand_chacha::rand_core::SeedableRng;
 
+use crate::external::knapsack::knapsack;
+use crate::external::util::as_scalar;
+use crate::pbss;
+use crate::pbss::{RerandomizedProofResponse, UnblindedSignature};
+use crate::serialization::{input, output, convert, SerializableScalar};
 use crate::types::*;
+use crate::types::credential::*;
+
 use crate::credential;
-use crate::serialization::{input, output, convert};
-use crate::prerequisites::{PrerequisitesProof, PrerequisitesProofInput, PrerequisitesProofSecrets};
-use crate::payout::{derive_reward_key, PayoutProof, PayoutProofInput, PayoutProofSecrets, PAYOUT_A};
-use crate::zksnark::{Transcript, GenericProof};
+use crate::proofs::participation::{ParticipationProof, ParticipationProofInput, ParticipationProofSecrets};
+use crate::proofs::payout::{PayoutProof, PayoutProofInput, PayoutProofSecrets};
+use crate::proofs::generic::{Transcript, GenericProof};
 
 #[wasm_bindgen]
 #[allow(non_snake_case)]
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Participant {
     identity: String,
+    attributes: Vec<u32>,
     credential: Option<Credential>,
-    issuerPublicKey: Option<IssuerPublicKey>
+    issuerPublicKey: Option<IssuerPublicKey>,
+    creditVerificationKey: Option<pbss::PublicKey>,
+    ledgerVerificationKey: VerificationKey
+}
+
+#[wasm_bindgen]
+#[allow(non_snake_case)]
+pub struct PayoutRequest {
+    costs: u32,
+    proof: GenericProof::<PayoutProofInput, Vec<RerandomizedProofResponse>>
+}
+
+#[wasm_bindgen]
+#[allow(non_snake_case)]
+impl PayoutRequest {
+  #[wasm_bindgen(getter)]
+  pub fn costs(&self) -> u32 {
+    self.costs
+  }
+
+  #[wasm_bindgen(getter)]
+  pub fn proof(&self) -> Result<Vec<u8>, JsError> {
+    output(&self.proof)
+  }
+}
+
+impl Participant {
+    pub fn credential(&self) -> Option<&Credential> {
+        self.credential.as_ref()
+    }
 }
 
 #[wasm_bindgen]
 #[allow(non_snake_case)]
 impl Participant {
-    pub fn serialize(&self) -> Result<JsValue, JsValue> {
-        output(&self)
-    }
-
-    pub fn deserialize(o: JsValue) -> Result<Participant, JsValue> {
-        input(o)
-    }
-
-    pub fn serializeBase64(&self) -> Result<JsValue, JsValue> {
-        let vec = convert(to_stdvec(&self))?;
-        Ok(base64::encode_config(&vec, base64::URL_SAFE_NO_PAD).into())
-    }
-
-    pub fn deserializeBase64(data: &str) -> Result<Participant, JsValue> {
-        let vec: Vec<u8> = convert(base64::decode_config(data, base64::URL_SAFE_NO_PAD))?;
-        convert(from_bytes(&vec))
-    }
-
-    pub fn serializeBinary(&self) -> Result<Vec<u8>, JsValue> {
-        convert(to_stdvec(&self))
-    }
-
-    pub fn deserializeBinary(data: &[u8]) -> Result<Participant, JsValue> {
-        convert(from_bytes(&data))
-    }
-
     #[wasm_bindgen(constructor)]
-    pub fn new(identity: &str) -> Participant {
+    pub fn new(identity: &str, attributes: &[u32], lvk: &[u8]) -> Participant {
         Participant {
             identity: identity.to_string(),
+            attributes: attributes.to_vec(),
             credential: None,
-            issuerPublicKey: None
+            issuerPublicKey: None,
+            creditVerificationKey: None,
+            ledgerVerificationKey: VerificationKey::try_from(lvk).unwrap()
         }
     }
 
-    pub fn data(&self) -> Result<JsValue, JsValue> {
-        output(&self)
+    #[wasm_bindgen(getter)]
+    pub fn role(&self) -> String {
+        "participant".to_string()
     }
 
     #[wasm_bindgen(getter)]
-    pub fn role(&self) -> JsValue {
-        JsValue::from("participant")
+    pub fn id(&self) -> String {
+        self.identity.to_string()
     }
 
     #[wasm_bindgen(getter)]
-    pub fn id(&self) -> Result<JsValue, JsValue> {
-        output(&self.identity)
+    pub fn identity(&self) -> String {
+        self.identity.to_string()
     }
 
     #[wasm_bindgen(getter)]
-    pub fn identity(&self) -> Result<JsValue, JsValue> {
-        output(&self.identity)
+    pub fn attributes(&self) -> Vec<u32> {
+        self.attributes.clone()
     }
 
-    pub fn requestCredential(&mut self, issuerPublicKey: JsValue, seed: &[u8]) -> Result<JsValue, JsValue> {
+    pub fn serialize(&self) -> Result<Vec<u8>, JsError> {
+        output(self)
+    }
+
+    pub fn deserialize(data: &[u8]) -> Result<Participant, JsError> {
+        input(data)
+    }
+
+    pub fn requestCredential(&mut self, issuerPublicKey: &[u8], creditVerificationKey: &[u8], seed: &[u8]) -> Result<Vec<u8>, JsError> {
         if self.credential.is_some() {
-            Err("already requested credential")?
+            Err(JsError::new("already requested credential"))?
         }
 
-        let seed: [u8;32] = convert(seed.try_into())?;
+        if seed.len() != 32 {
+            Err(JsError::new("invalid seed provided"))?
+        }
+
+        let seed: [u8;32] = seed.try_into().unwrap();
         let mut rng = ChaCha20Rng::from_seed(seed);
 
         let ipk: IssuerPublicKey = input(issuerPublicKey)?;
+        let cvk: pbss::PublicKey = input(creditVerificationKey)?;
 
-        let (request, credential) = credential::issue_request(&mut rng, &ipk, &self.identity);
+        let attributes = self.attributes.iter().map(|e| as_scalar(*e)).collect();
+
+        let (request, credential) = credential::issue_request(&mut rng, &ipk, &self.identity, attributes);
         self.credential = Some(credential);
         self.issuerPublicKey = Some(ipk);
+        self.creditVerificationKey = Some(cvk);
 
+        // request
         output(request)
     }
 
-    pub fn retrieveCredential(&mut self, issueResponse: JsValue) -> Result<(), JsValue> {
+    pub fn retrieveCredential(&mut self, issueResponse: &[u8]) -> Result<(), JsError> {
         let response: IssueResponse = input(issueResponse)?;
         match (&mut self.credential, &self.issuerPublicKey) {
             (Some(credential), Some(ipk)) => {
                 if credential.is_signed() {
-                    Err("credential already retrieved")?;
+                    Err(JsError::new("credential already retrieved"))?;
                 }
 
                 credential::get_credential(&ipk, &response, credential)?;
                 Ok(())
             },
-            _ => Err("credential not yet requested")?
+            _ => Err(JsError::new("credential not yet requested"))?
         }
     }
 
-    pub fn participate(&self, resource: &Resource) -> Result<Participation, JsValue> {
-        if let Some(credential) = &self.credential {
+    pub fn participate(&self, resource: &Resource) -> Result<Vec<u8>, JsError> {
+        if let (Some(credential), Some(issuerPublicKey), Some(creditVerificationKey)) = (&self.credential, &self.issuerPublicKey, &self.creditVerificationKey) {
             if !credential.is_signed() {
-                Err("credential not signed")?;
+                Err(JsError::new("credential not signed"))?;
             }
 
-            let (inputs, secrets) = PrerequisitesProofInput::new(
+            let (inputs, secrets) = ParticipationProofInput::new(
+                issuerPublicKey,
+                creditVerificationKey,
                 credential,
-                &resource.id,
-                &resource.qualifier,
-                &resource.disqualifier
+                resource,
             );
 
-            let mut prover_transcript = Transcript::new(b"prerequisites");
-            let proof = convert(GenericProof::<PrerequisitesProofInput>::proove::<PrerequisitesProofSecrets, PrerequisitesProof>(&mut prover_transcript, inputs, secrets))?;
+            let mut prover_transcript = Transcript::new(b"participation");
+            let proof = GenericProof::<ParticipationProofInput, ()>::proove::<ParticipationProofSecrets, ParticipationProof>(&mut prover_transcript, inputs, secrets)?;
 
-            let mut verifier_transcript = Transcript::new(b"prerequisites");
-            convert(proof.verify::<PrerequisitesProofSecrets, PrerequisitesProof>(&mut verifier_transcript))?;
-
-            let request = credential::authenticate(&credential, &resource.id);
-
-            let rewardKey = (bls12_381::G1Affine::generator() * derive_reward_key(&credential, &resource.id)).to_affine();
-
-            let participation = Participation {
-                id: resource.id,
-                reward: resource.reward,
-                authenticationProof: request,
-                prerequisitesProof: proof,
-                rewardKey: rewardKey
-            };
-
-            Ok(participation)
+            let participation = Participation { id: resource.id, proof: proof };
+            participation.serialize()
         } else {
-            Err("credential not yet requested".into())
+            Err(JsError::new("credential not yet requested"))
         }
     }
 
-    pub fn getBalance(&self, transactions: JsValue, spend: JsValue) -> Result<JsValue, JsValue> {
-        let transactions: Vec<Transaction> = input(transactions)?;
-        let spend: HashSet<Tag> = input(spend)?;
+    pub fn getBalance(&self, transactions: &[u8]) -> Result<JsValue, JsError> {
+        let mut ledger: Ledger = Ledger::default();
+        let transactions: Ledger = input(transactions)?;
 
-        let A = PAYOUT_A();
-        let G = bls12_381::G1Affine::generator();
-
-        if let Some(credential) = &self.credential {
-            if !credential.is_signed() {
-                Err("credential not signed")?;
-            }
-
-            let mut balance: u32 = 0;
-            let mut participated: HashMap<ResourceIdentifier, Tag> = HashMap::new();
-            let mut keys: HashMap<ResourceIdentifier, bls12_381::Scalar> = HashMap::new();
-            for tx in transactions {
-                let sk = match keys.get(&tx.id) {
-                    Some(sk) => sk,
-                    _ => {
-                        keys.insert(tx.id.clone(), derive_reward_key(&credential, &tx.id));
-                        keys.get(&tx.id).unwrap()
-                    }
-                };
-
-                if tx.pk == (G * sk).to_affine() {
-                    let tag = Tag::from(A * sk.invert().unwrap());
-                    if !spend.contains(&tag) {
-                        balance += tx.value as u32;
-                    }
-
-                    participated.insert(tx.id.clone(), tag);
-                }
-            }
-
-            output((balance, participated))
-        } else {
-            Err("credential not yet requested".into())
-        }
-    }
-
-    pub fn requestPayout(&self, value: u8, target: &str, recipient: &str, transactions: JsValue, spend: JsValue) -> Result<JsValue, JsValue> {
-        let transactions: Vec<Transaction> = input(transactions)?;
-        let spend: HashSet<Tag> = input(spend)?;
-
-        let A = PAYOUT_A();
-        let g = bls12_381::G1Affine::generator();
+        let mut participated: Vec<String> = vec![];
+        let mut owned: HashMap<String, u8> = HashMap::new();
 
         if let Some(credential) = &self.credential {
             if !credential.is_signed() {
-                Err("credential not signed")?;
+                Err(JsError::new("credential not signed"))?;
             }
 
-            let mut keys: HashMap<ResourceIdentifier, bls12_381::Scalar> = HashMap::new();
-            let unspend: Vec<&Transaction> = transactions.iter()
-                .filter(|tx| {
-                    let sk = match keys.get(&tx.id) {
-                        Some(sk) => sk,
-                        _ => {
-                            keys.insert(tx.id.clone(), derive_reward_key(&credential, &tx.id));
-                            keys.get(&tx.id).unwrap()
+            for entry in transactions.entries {
+                // verify entry
+                ledger.verify(&self.ledgerVerificationKey, &entry)?;
+
+                match entry.entryType() {
+                    LedgerEntryType::Payout => {
+                        for coin in entry.payout.unwrap().nullifier {
+                            owned.remove(&SerializableScalar::to_string(&coin));
                         }
-                    };
-                    (tx.pk - g * sk).is_identity().into() && !spend.contains(&Tag::from(A * sk.invert().unwrap()))
-                }).collect();
-            drop(keys);
-
-            let sum = unspend.iter().fold(0, |acc, tx| acc + tx.value as usize);
-
-            // solve a 0/1 knapsack to find a set of spendable inputs that sum up to at least value
-            let w = sum - value as usize;
-            let n: usize = unspend.len();
-            let mut m: Vec<Vec<(usize, Vec<&Transaction>)>> = vec![vec![(0, vec![]); w + 1]; n + 1];
-
-            for i in 1..=n {
-                for j in 1..=w {
-                    m[i][j] = match j >= unspend[i - 1].value.into() && m[i - 1][j - (unspend[i - 1].value as usize)].0 + (unspend[i - 1].value as usize) > m[i - 1][j].0 {
-                        true => (
-                            (unspend[i - 1].value as usize) + m[i - 1][j - (unspend[i - 1].value as usize)].0,
-                            m[i - 1][j - (unspend[i - 1].value as usize)].1.iter().chain(std::iter::once(&unspend[i - 1])).cloned().collect()
-                        ),
-                        false => m[i - 1][j].clone()
+                    },
+                    LedgerEntryType::Transaction => {
+                        let tx = entry.transaction.unwrap();
+                        let tag = credential.derive_tag(&tx.participation.study)?;
+                        if tx.participation.tag == tag {
+                            participated.push(SerializableScalar::to_string(&tx.participation.study));
+                            let mut rng = credential.derive_reward_rng(&tx.participation.study);
+                            let s = <bls12_381::Scalar as ff::Field>::random(&mut rng);
+                            owned.insert(SerializableScalar::to_string(&s), tx.participation.value);
+                        }
                     }
                 }
             }
 
-            let spend: Vec<Transaction> = unspend.iter().filter_map(|e| match m[n][w].1.contains(e) {
-                false => Some(*e.clone()),
-                true => None
-            }).collect();
-            drop(m);
+            let balance = owned.iter().fold(0, |acc, (_, reward)| acc + *reward as u32);
+            if cfg!(target_family = "wasm") {
+                convert(serde_wasm_bindgen::to_value(&(balance, participated)))
+            } else {
+                Ok(JsValue::NULL)
+            }
+        } else {
+            Err(JsError::new("credential not yet requested"))
+        }
+    }
 
-            let cost = spend.iter().fold(0, |acc, tx| acc + tx.value as usize);
+    pub fn requestNulls(&self) -> Result<NullRequest, JsError> {
+        if let (Some(credential), Some(creditVerificationKey)) = (&self.credential, &self.creditVerificationKey) {
+            if !credential.is_signed() {
+                Err(JsError::new("credential not signed"))?;
+            }
+
+            Ok(NullRequest::new(creditVerificationKey, &credential))
+        } else {
+            Err(JsError::new("credential not yet requested"))
+        }
+    }
+
+    pub fn requestPayout(&self, amount: u8, target: &str, recipient: &str, nulls: &[u8], transactions: &[u8]) -> Result<PayoutRequest, JsError> {
+        let nulls: Vec<UnblindedSignature> = input(nulls)?;
+
+        let mut ledger: Ledger = Ledger::default();
+        let transactions: Ledger = input(transactions)?;
+
+        let mut owned: Vec<(Scalar, Scalar, Transaction)> = Vec::new();
+
+        if let (Some(credential), Some(issuerPublicKey), Some(creditVerificationKey)) = (&self.credential, &self.issuerPublicKey, &self.creditVerificationKey) {
+            if !credential.is_signed() {
+                Err(JsError::new("credential not signed"))?;
+            }
+
+            for entry in transactions.entries {
+                // verify entry
+                ledger.verify(&self.ledgerVerificationKey, &entry)?;
+
+                match entry.entryType() {
+                    LedgerEntryType::Payout => {
+                        for coin in entry.payout.unwrap().nullifier {
+                            owned.retain(|(c, _, _)| coin != *c);
+                        }
+                    },
+                    LedgerEntryType::Transaction => {
+                        let tx = entry.transaction.unwrap();
+                        let tag = credential.derive_tag(&tx.participation.study)?;
+                        if tx.participation.tag == tag {
+                            let mut rng = credential.derive_reward_rng(&tx.participation.study);
+                            let s = <bls12_381::Scalar as ff::Field>::random(&mut rng);
+                            let d = <bls12_381::Scalar as ff::Field>::random(&mut rng);
+                            owned.push((s, d, tx));
+                        }
+                    }
+                }
+            }
+
+            let unspend: Vec<usize> = owned.iter().map(|(_, _, tx)| tx.participation.value as usize).collect();
+            let balance: usize = unspend.iter().sum();
+            let remaining = balance - amount as usize;
+
+            let mut costs = 0;
+            let (_, items) = knapsack(remaining, unspend);
+            let spend: Result<Vec<UnblindedSignature>, JsError> = owned.iter()
+                .enumerate()
+                .filter(|(i, _)| !items.contains(i))
+                .map(|(_, (s, d, tx))| {
+                    let m = vec![as_scalar(tx.participation.value as u32)];
+                    let s = vec![s.clone(), credential.identity.clone()];
+                    let d = d;
+                    costs = costs + tx.participation.value;
+                    convert(pbss::Unblind(creditVerificationKey, &tx.coin, &m, &s, &d))
+                }).collect();
+            let spend = spend?;
 
             let (inputs, secrets) = PayoutProofInput::new(
-                credential,
-                value,
+                issuerPublicKey,
+                creditVerificationKey,
+                amount,
                 target,
                 recipient,
                 spend,
-                transactions
+                nulls
             );
 
             let mut transcript = Transcript::new(b"payout");
-            let proof = convert(GenericProof::<PayoutProofInput>::proove::<PayoutProofSecrets, PayoutProof>(&mut transcript, inputs, secrets))?;
+            let proof = GenericProof::<PayoutProofInput, Vec<RerandomizedProofResponse>>::proove::<PayoutProofSecrets, PayoutProof>(&mut transcript, inputs, secrets)?;
+            let costs = costs as u32;
 
-            let mut verifier_transcript = Transcript::new(b"payout");
-            convert(proof.verify::<PayoutProofSecrets, PayoutProof>(&mut verifier_transcript))?;
-
-            output((cost, proof))
+            Ok(PayoutRequest { costs, proof })
         } else {
-            Err("credential not yet requested".into())
+            Err(JsError::new("credential not yet requested"))
         }
     }
 }

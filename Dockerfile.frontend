@@ -1,0 +1,33 @@
+FROM rust:latest as wasm
+
+WORKDIR /prepams/
+
+RUN cargo install wasm-pack
+
+RUN apt-get update && apt-get install -y jq
+
+COPY shared shared
+
+RUN cd shared && ./build.sh
+
+FROM node:alpine as build
+WORKDIR /app/frontend/
+COPY --from=wasm /prepams/shared/pkg /app/shared/pkg
+COPY frontend/package*.json /app/frontend/
+RUN npm install
+COPY frontend .
+RUN NODE_OPTIONS=--openssl-legacy-provider npm run build
+
+WORKDIR /app/evaluation/
+COPY evaluation .
+COPY --from=wasm /prepams/shared/pkg /app/shared/pkg
+RUN npm install
+RUN npm run build
+
+FROM nginx:alpine
+
+COPY --from=build /app/frontend/dist /usr/share/nginx/html
+COPY --from=build /app/evaluation/dist /usr/share/nginx/html/eval
+COPY frontend/default-nginx.conf /etc/nginx/conf.d/default.conf 
+EXPOSE 80
+

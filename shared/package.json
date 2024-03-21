@@ -1,0 +1,13 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "serve": "nodemon --exec 'bash ./build.sh --debug' -e 'rs'",
+    "build": "bash ./build.sh",
+    "benchmark": "cargo-criterion --message-format=json --plotting-backend=disabled -j 6 | tee microbenchmarks.json"
+  },
+  "author": "",
+  "license": "MIT"
+}

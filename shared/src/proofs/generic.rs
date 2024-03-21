@@ -3,21 +3,23 @@
 
 pub use merlin::Transcript;
 use core::iter;
+use serde::{Serialize, Deserialize};
 use std::hash::{Hash, Hasher};
 use std::collections::HashMap;
 use std::collections::BTreeMap;
-
-use serde::{Serialize, Deserialize};
 
 use ff::Field;
 use group::Curve;
 
 use bls12_381::{G1Affine, Scalar};
-use crate::external::error::ProofError;
+use crate::types::ProofError;
+use crate::external::console::*;
 use crate::external::inner_product_proof::{InnerProductProof, inner_product, vartime_multiscalar_mul};
 use crate::external::util::{add_vec, smul_vec, mul_vec, sub_vec, VecPoly1};
 use crate::external::transcript::TranscriptProtocol;
 use crate::external::inner_product_proof;
+
+const DEBUG_ASSERTIONS: bool = false;
 
 #[derive(Debug, Clone)]
 pub enum Constraint {
@@ -278,7 +280,6 @@ impl Variables {
 
         (theta, inv_theta, mu, nu, omega, alpha, beta, delta)
     }
-
 }
 
 pub enum ConstraintType {
@@ -353,17 +354,17 @@ pub enum Variable {
         id: String,
         #[serde(with = "crate::serialization::G1Affine")]
         G: G1Affine,
-        #[serde(skip)]
+        #[serde(with = "crate::serialization::Scalar")]
         cl: Scalar,
-        #[serde(skip)]
+        #[serde(with = "crate::serialization::Scalar")]
         cr: Scalar
     },
 
     Scratch {
         id: String,
-        #[serde(skip)]
+        #[serde(with = "crate::serialization::Scalar")]
         cl: Scalar,
-        #[serde(skip)]
+        #[serde(with = "crate::serialization::Scalar")]
         cr: Scalar,
     }
 }
@@ -401,20 +402,23 @@ impl Variable {
     }
 }
 
-pub trait ProofInput {
+pub trait ProofInput: Serialize {
     fn commit(&self, transcript: &mut Transcript);
 }
 
-pub trait Proof<P: ProofInput + Clone, S: Default> {
+pub trait Proof<P: ProofInput + Clone, S: Default, A: Serialize + Clone + Default> {
     fn get_variables(inputs: &P, secrets: &S, u: &Scalar) -> Variables;
     fn get_constraints(inputs: &P, y: &Scalar) -> Vec<Constraint>;
-    fn additional_checks(_inputs: &P) -> bool {
+    fn additional_checks(_inputs: &P, _data: &A, _transcript: &mut Transcript) -> bool {
         true
+    }
+    fn additional_data(_inputs: &P, _secrets: &S, _transcript: &mut Transcript) -> A {
+        A::default()
     }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct GenericProof<P: ProofInput + Clone> {
+pub struct GenericProof<P: ProofInput + Clone, A: Serialize + Clone + Default> {
     pub vars: Variables,
     pub inputs: P,
     #[serde(with = "crate::serialization::G1Affine")]
@@ -431,11 +435,12 @@ pub struct GenericProof<P: ProofInput + Clone> {
     pub r: Scalar,
     #[serde(with = "crate::serialization::Scalar")]
     pub t: Scalar,
-    pub ipp_proof: InnerProductProof
+    pub ipp_proof: InnerProductProof,
+    pub add_data: A
 }
 
-impl<P: ProofInput + Clone> GenericProof<P> {
-    pub fn proove<S: Default, F: Proof<P, S>>(transcript: &mut Transcript, inputs: P, secrets: S) -> Result<GenericProof<P>, ProofError> {
+impl<P: ProofInput + Clone, A: Serialize + Clone + Default> GenericProof<P, A> {
+    pub fn proove<S: Default, F: Proof<P, S, A>>(transcript: &mut Transcript, inputs: P, secrets: S) -> Result<GenericProof<P, A>, ProofError> {
         let mut csrng = rand::thread_rng();
 
         // get temporary vars
@@ -452,6 +457,10 @@ impl<P: ProofInput + Clone> GenericProof<P> {
 
         let vars = F::get_variables(&inputs, &secrets, &u);
 
+        if cfg!(debug_assertions) && DEBUG_ASSERTIONS {
+            console_log!("{:?}", vars);
+        }
+
         let GP: Vec<G1Affine> = vars.get_challenge(transcript);
 
         let Gprime: Vec<G1Affine> = (0..(vars.len() - GP.len())).map(|_| transcript.challenge_point(b"Gtypes")).collect();
@@ -463,9 +472,9 @@ impl<P: ProofInput + Clone> GenericProof<P> {
 
         let rA = Scalar::random(&mut csrng);
         let A = (F * rA + vartime_multiscalar_mul(&cl, &G0) + vartime_multiscalar_mul(&cr, &H)).to_affine();
-        transcript.append_point(b"A commitment", &A);
+        transcript.append_g1(b"A commitment", &A);
 
-        if cfg!(debug_assertions) {
+        if cfg!(debug_assertions) && DEBUG_ASSERTIONS {
             let G_test = vars.get_G(&Scalar::random(&mut csrng), &GP, &Gprime);
             let A_test = (F * rA + vartime_multiscalar_mul(&cl, &G_test) + vartime_multiscalar_mul(&cr, &H)).to_affine();
             assert_eq!(A_test, A, "A should be independent of w");
@@ -482,7 +491,7 @@ impl<P: ProofInput + Clone> GenericProof<P> {
 
         let rS = Scalar::random(&mut csrng);
         let S = (F * rS + vartime_multiscalar_mul(&sl, &Gw) + vartime_multiscalar_mul(&sr, &H)).to_affine();
-        transcript.append_point(b"S commitment", &S);
+        transcript.append_g1(b"S commitment", &S);
 
         let y = transcript.challenge_scalar(b"y");
         let z = transcript.challenge_scalar(b"z");
@@ -501,11 +510,11 @@ impl<P: ProofInput + Clone> GenericProof<P> {
         let tau_1 = Scalar::random(&mut csrng);
         let tau_2 = Scalar::random(&mut csrng);
 
-        let T1 = (G1Affine::identity() * t_x.1 + F * tau_1).to_affine();
-        let T2 = (G1Affine::identity() * t_x.2 + F * tau_2).to_affine();
+        let T1 = (G1Affine::generator() * t_x.1 + F * tau_1).to_affine();
+        let T2 = (G1Affine::generator() * t_x.2 + F * tau_2).to_affine();
 
-        transcript.append_point(b"T1 commitment", &T1);
-        transcript.append_point(b"T2 commitment", &T2);
+        transcript.append_g1(b"T1 commitment", &T1);
+        transcript.append_g1(b"T2 commitment", &T2);
 
         let x = transcript.challenge_scalar(b"x");
 
@@ -519,13 +528,17 @@ impl<P: ProofInput + Clone> GenericProof<P> {
         transcript.append_scalar(b"r", &r);
         transcript.append_scalar(b"t", &t);
 
-        if cfg!(debug_assertions) {
+        if cfg!(debug_assertions) && DEBUG_ASSERTIONS {
             let lhs = (F * r + vartime_multiscalar_mul(&lvec, &Gw) + vartime_multiscalar_mul(&mul_vec(&inv_theta, &rvec), &H)).to_affine();
             let rhs = (A + S * x + vartime_multiscalar_mul(&alpha, &Gw) + vartime_multiscalar_mul(&beta, &H)).to_affine();
-            println!("lhs: {:#?}", lhs);
-            println!("rhs: {:#?}", rhs);
-            println!("t_x: {:#?}", t_x.0);
-            println!("delta: {:#?}", delta);
+            console_log!("rvec: {:#?}", lvec);
+            console_log!("lvec: {:#?}", rvec);
+            console_log!("theta: {:#?}", theta);
+            console_log!("inv_theta: {:#?}", inv_theta);
+            console_log!("lhs: {:#?}", lhs);
+            console_log!("rhs: {:#?}", rhs);
+            console_log!("t_x: {:#?}", t_x.0);
+            console_log!("delta: {:#?}", delta);
             assert_eq!(lhs, rhs, "verification eq should hold");
             assert_eq!(t_x.0, delta, "offset should be delta");
             assert_eq!(t, t_x.0 + x*t_x.1 + x*x*t_x.2, "polynomial holds");
@@ -533,7 +546,7 @@ impl<P: ProofInput + Clone> GenericProof<P> {
 
         // Get a challenge value to combine statements for the IPP
         let ippw = transcript.challenge_scalar(b"ippw");
-        let Q = (G1Affine::identity() * ippw).to_affine();
+        let Q = (G1Affine::generator() * ippw).to_affine();
 
         // pad to next power of two
         let padlen = m.next_power_of_two() - m;
@@ -566,10 +579,12 @@ impl<P: ProofInput + Clone> GenericProof<P> {
             rvec.clone(),
         );
 
-        Ok(GenericProof { A, S, T1, T2, tau, r, ipp_proof, t, vars, inputs })
+        let add_data: A = F::additional_data(&inputs, &secrets, transcript);
+
+        Ok(GenericProof { A, S, T1, T2, tau, r, ipp_proof, t, vars, inputs, add_data })
     }
 
-    pub fn verify<S: Default, F: Proof<P, S>>(&self, transcript: &mut Transcript) -> Result<(), ProofError> {
+    pub fn verify<S: Default, F: Proof<P, S, A>>(&self, transcript: &mut Transcript) -> Result<(), ProofError> {
         let m = self.vars.len();
         transcript.append_u64(b"m", m as u64);
 
@@ -591,17 +606,17 @@ impl<P: ProofInput + Clone> GenericProof<P> {
         let G0 = vars.get_G(&Scalar::zero(), &GP, &Gprime);
         let H: Vec<G1Affine> = G0.iter().map(|_| transcript.challenge_point(b"blinding Ps")).collect();
 
-        transcript.append_point(b"A commitment", &self.A);
+        transcript.append_g1(b"A commitment", &self.A);
 
         let w = transcript.challenge_scalar(b"w");
 
-        transcript.append_point(b"S commitment", &self.S);
+        transcript.append_g1(b"S commitment", &self.S);
 
         let y = transcript.challenge_scalar(b"y");
         let z = transcript.challenge_scalar(b"z");
 
-        transcript.append_point(b"T1 commitment", &self.T1);
-        transcript.append_point(b"T2 commitment", &self.T2);
+        transcript.append_g1(b"T1 commitment", &self.T1);
+        transcript.append_g1(b"T2 commitment", &self.T2);
 
         let x = transcript.challenge_scalar(b"x");
         let Gw = vars.get_G(&w, &GP, &Gprime);
@@ -614,7 +629,7 @@ impl<P: ProofInput + Clone> GenericProof<P> {
         let (_theta, inv_theta, _mu, _nu, _omega, alpha, beta, delta) = vars.get_constraints(&constraints, &z);
 
         let ippw = transcript.challenge_scalar(b"ippw");
-        let Q = (G1Affine::identity() * ippw).to_affine();
+        let Q = (G1Affine::generator() * ippw).to_affine();
 
         let ipPmQ = vartime_multiscalar_mul(
             iter::once(&Scalar::one())
@@ -649,17 +664,16 @@ impl<P: ProofInput + Clone> GenericProof<P> {
             return Err(ProofError::VerificationError)
         }
 
-        let lnd = G1Affine::identity() * self.t + F * self.tau;
-        let rnd = G1Affine::identity() * delta + self.T1 * x + self.T2 * x * x;
+        let lnd = G1Affine::generator() * self.t + F * self.tau;
+        let rnd = G1Affine::generator() * delta + self.T1 * x + self.T2 * x * x;
 
         if lnd.to_affine() != rnd.to_affine() {
             return Err(ProofError::VerificationError)
         }
 
-        if !F::additional_checks(&self.inputs) {
+        if !F::additional_checks(&self.inputs, &self.add_data, transcript) {
             return Err(ProofError::VerificationError)
         }
-
 
         Ok(())
     }

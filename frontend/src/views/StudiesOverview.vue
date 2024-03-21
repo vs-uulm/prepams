@@ -18,12 +18,12 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-subtitle class="pb-1">
-            <v-btn small :to="`/study/${study.id}/participate`" :disabled="!$store.state.user || $store.state.user.role !== 'participant'" class="float-right" v-if="$store.state.user && !$store.state.user.participated[study.id]">
+            <v-btn small :to="`/study/${study.id}/participate`" :disabled="!$store.state.user || $store.state.user.role !== 'participant'" class="float-right" v-if="$store.state.user && !$store.state.user.participated.has(study.id)">
               <v-icon small left>mdi-clipboard-edit-outline</v-icon>
               Participate
             </v-btn>
 
-            <v-chip color="green" text-color="white" small class="float-right" v-else-if="$store.state.user && $store.state.user.participated[study.id]">
+            <v-chip color="green" text-color="white" small class="float-right" v-else-if="$store.state.user && $store.state.user.participated.has(study.id)">
               <v-icon small color="white" left>mdi-check-bold</v-icon>
               participated
             </v-chip>

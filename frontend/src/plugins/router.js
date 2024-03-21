@@ -1,11 +1,12 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 
 import StudiesOverview from '@/views/StudiesOverview';
 import StudiesList from '@/views/StudiesList';
 import StudyForm from '@/views/StudyForm';
 import StudyDialog from '@/views/StudyDialog';
 import StudyParticipation from '@/views/StudyParticipation';
+import PayoutsLog from '@/views/PayoutsLog';
 
 Vue.use(Router);
 
@@ -24,6 +25,10 @@ export default new Router({
       component: StudyParticipation
     }]
   }, {
+    path: '/studies/new',
+    name: 'study',
+    component: StudyForm
+  }, {
     path: '/studies',
     name: 'studies',
     component: StudiesList,
@@ -32,8 +37,8 @@ export default new Router({
       component: StudyDialog
     }]
   }, {
-    path: '/studies/new',
-    name: 'study',
-    component: StudyForm
+    path: '/payouts',
+    name: 'payouts',
+    component: PayoutsLog
   }]
 });

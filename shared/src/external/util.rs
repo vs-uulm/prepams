@@ -6,8 +6,11 @@ extern crate alloc;
 use alloc::vec;
 use alloc::vec::Vec;
 
-use super::inner_product_proof::inner_product;
+use byteorder::{LittleEndian, ByteOrder};
 use bls12_381::{G1Affine, G1Projective, Scalar};
+use group::Curve;
+
+use super::inner_product_proof::inner_product;
 
 /// Represents a degree-1 vector polynomial \\(\mathbf{a} + \mathbf{b} \cdot x\\).
 pub struct VecPoly1(pub Vec<Scalar>, pub Vec<Scalar>);
@@ -226,55 +229,6 @@ impl Poly6 {
     }
 }
 
-/*impl Drop for VecPoly1 {
-    fn drop(&mut self) {
-        for e in self.0.iter_mut() {
-            e.clear();
-        }
-        for e in self.1.iter_mut() {
-            e.clear();
-        }
-    }
-}
-
-impl Drop for Poly2 {
-    fn drop(&mut self) {
-        self.0.clear();
-        self.1.clear();
-        self.2.clear();
-    }
-}
-
-#[cfg(feature = "yoloproofs")]
-impl Drop for VecPoly3 {
-    fn drop(&mut self) {
-        for e in self.0.iter_mut() {
-            e.clear();
-        }
-        for e in self.1.iter_mut() {
-            e.clear();
-        }
-        for e in self.2.iter_mut() {
-            e.clear();
-        }
-        for e in self.3.iter_mut() {
-            e.clear();
-        }
-    }
-}
-
-#[cfg(feature = "yoloproofs")]
-impl Drop for Poly6 {
-    fn drop(&mut self) {
-        self.t1.clear();
-        self.t2.clear();
-        self.t3.clear();
-        self.t4.clear();
-        self.t5.clear();
-        self.t6.clear();
-    }
-}*/
-
 /// Raises `x` to the power `n` using binary exponentiation,
 /// with (1 to 2)*lg(n) scalar multiplications.
 /// TODO: a consttime version of this would be awfully similar to a Montgomery ladder.
@@ -324,6 +278,35 @@ pub fn read32(data: &[u8]) -> [u8; 32] {
     let mut buf32 = [0u8; 32];
     buf32[..].copy_from_slice(&data[..32]);
     buf32
+}
+
+pub fn rand_scalar() -> Scalar {
+    <bls12_381::Scalar as ff::Field>::random(rand::thread_rng())
+}
+
+pub fn assert_point(points: &[(&str, G1Affine, G1Affine)]) {
+    for (id, p, g) in points {
+        assert!(g.eq(&p), "point {} did not match {:?}", id, p.to_compressed());
+    }
+}
+
+pub fn assert_generators(prefix: &str, g1: std::collections::HashMap<&str, G1Affine>) {
+    use bls12_381::hash_to_curve::{HashToCurve, ExpandMsgXmd};
+    for (k, g) in &g1 {
+        let id = format!("{}_{}", prefix, k);
+        let tag = id.as_bytes();
+        let x = <bls12_381::G1Projective as HashToCurve<ExpandMsgXmd<sha2::Sha256>>>::hash_to_curve(tag, tag).to_affine();
+        assert!(g.eq(&x), "generator {} did not match {:?}", id, x.to_compressed());
+    }
+}
+
+pub fn as_u32(s: &Scalar) -> u32 {
+    let b = s.to_bytes();
+    LittleEndian::read_u32(&b[..8])
+}
+
+pub fn as_scalar(u: u32) -> Scalar {
+    Scalar::from(u as u64)
 }
 
 #[cfg(test)]
@@ -400,26 +383,6 @@ mod tests {
         result
     }
 
-    /*
-    #[test]
-    fn test_scalar_exp() {
-        let x = Scalar::from_bits(
-            *b"\x84\xfc\xbcOx\x12\xa0\x06\xd7\x91\xd9z:'\xdd\x1e!CE\xf7\xb1\xb9Vz\x810sD\x96\x85\xb5\x07",
-        );
-        assert_eq!(scalar_exp_vartime(&x, 0), Scalar::one());
-        assert_eq!(scalar_exp_vartime(&x, 1), x);
-        assert_eq!(scalar_exp_vartime(&x, 2), x * x);
-        assert_eq!(scalar_exp_vartime(&x, 3), x * x * x);
-        assert_eq!(scalar_exp_vartime(&x, 4), x * x * x * x);
-        assert_eq!(scalar_exp_vartime(&x, 5), x * x * x * x * x);
-        assert_eq!(scalar_exp_vartime(&x, 64), scalar_exp_vartime_slow(&x, 64));
-        assert_eq!(
-            scalar_exp_vartime(&x, 0b11001010),
-            scalar_exp_vartime_slow(&x, 0b11001010)
-        );
-    }
-    */
-
     #[test]
     fn test_sum_of_powers() {
         let x = Scalar::from(10u64);
@@ -445,48 +408,4 @@ mod tests {
         assert_eq!(sum_of_powers_slow(&x, 6), Scalar::from(111111u64));
     }
 
-    /*#[test]
-    fn vec_of_scalars_clear_on_drop() {
-        let mut v = vec![Scalar::from(24u64), Scalar::from(42u64)];
-
-        for e in v.iter_mut() {
-            e.clear();
-        }
-
-        fn flat_slice<T>(x: &[T]) -> &[u8] {
-            use core::mem;
-            use core::slice;
-
-            unsafe { slice::from_raw_parts(x.as_ptr() as *const u8, mem::size_of_val(x)) }
-        }
-
-        assert_eq!(flat_slice(&v.as_slice()), &[0u8; 64][..]);
-        assert_eq!(v[0], Scalar::zero());
-        assert_eq!(v[1], Scalar::zero());
-    }
-
-    #[test]
-    fn tuple_of_scalars_clear_on_drop() {
-        let mut v = Poly2(
-            Scalar::from(24u64),
-            Scalar::from(42u64),
-            Scalar::from(255u64),
-        );
-
-        v.0.clear();
-        v.1.clear();
-        v.2.clear();
-
-        fn as_bytes<T>(x: &T) -> &[u8] {
-            use core::mem;
-            use core::slice;
-
-            unsafe { slice::from_raw_parts(x as *const T as *const u8, mem::size_of_val(x)) }
-        }
-
-        assert_eq!(as_bytes(&v), &[0u8; 96][..]);
-        assert_eq!(v.0, Scalar::zero());
-        assert_eq!(v.1, Scalar::zero());
-        assert_eq!(v.2, Scalar::zero());
-    }*/
 }

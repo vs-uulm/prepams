@@ -1,127 +1,208 @@
-use std::collections::HashSet;
-
+use rand::thread_rng;
+use bls12_381::Scalar;
 use wasm_bindgen::prelude::*;
 
+use postcard::to_stdvec;
 use serde::{Serialize, Deserialize};
-use postcard::{from_bytes, to_stdvec};
-use ed25519_zebra::{SigningKey, VerificationKey, Signature};
+use ed25519_zebra::{SigningKey, VerificationKey};
+use rand_chacha::ChaCha20Rng;
+use rand_chacha::rand_core::SeedableRng;
 
-use crate::types::*;
-use crate::credential;
-use crate::zksnark::{Transcript, GenericProof};
 use crate::serialization::{input, output, convert};
-use crate::payout::{MAX_INPUTS, PayoutProof, PayoutProofInput, PayoutProofSecrets};
+use crate::pbss::{self, BlindedSignRequest, BlindedSignature, RerandomizedProofResponse};
+use crate::types::*;
+use crate::types::credential::*;
+use crate::credential;
+use crate::proofs::generic::{Transcript, GenericProof};
+use crate::proofs::payout::{MAX_INPUTS, PayoutProof, PayoutProofInput, PayoutProofSecrets};
 
 #[wasm_bindgen]
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize)]
 pub struct Issuer {
+    attributes: usize,
     signingKey: SigningKey,
     publicKey: IssuerPublicKey,
-    secretKey: IssuerSecretKey
+    secretKey: IssuerSecretKey,
+    creditSigningKey: pbss::SecretKey,
+    creditVerificationKey: pbss::PublicKey,
+    #[serde(skip_serializing)]
+    #[serde(skip_deserializing)]
+    pub(crate) ledger: Ledger
+}
+
+#[wasm_bindgen]
+#[allow(non_snake_case)]
+pub struct PayoutResult {
+    target: String,
+    recipient: String,
+    entry: LedgerEntry
+}
+
+#[wasm_bindgen]
+#[allow(non_snake_case)]
+impl PayoutResult {
+  #[wasm_bindgen(getter)]
+  pub fn target(&self) -> String {
+    self.target.clone()
+  }
+
+  #[wasm_bindgen(getter)]
+  pub fn recipient(&self) -> String {
+    self.recipient.clone()
+  }
+
+  #[wasm_bindgen(getter)]
+  pub fn entry(&self) -> LedgerEntry {
+    self.entry.clone()
+  }
 }
 
 #[wasm_bindgen]
 #[allow(non_snake_case)]
 impl Issuer {
-    pub fn serialize(&self) -> Result<JsValue, JsValue> {
-        output(&self)
-    }
-
-    pub fn deserialize(o: JsValue) -> Result<Issuer, JsValue> {
-        input(o)
-    }
-
-    pub fn serializeBase64(&self) -> Result<JsValue, JsValue> {
-        let vec = convert(to_stdvec(&self))?;
-        Ok(base64::encode_config(&vec, base64::URL_SAFE_NO_PAD).into())
-    }
-
-    pub fn deserializeBase64(data: &str) -> Result<Issuer, JsValue> {
-        let vec: Vec<u8> = convert(base64::decode_config(data, base64::URL_SAFE_NO_PAD))?;
-        convert(from_bytes(&vec))
-    }
-
-    pub fn serializeBinary(&self) -> Result<Vec<u8>, JsValue> {
-        convert(to_stdvec(&self))
-    }
-
-    pub fn deserializeBinary(data: &[u8]) -> Result<Issuer, JsValue> {
-        convert(from_bytes(&data))
-    }
-
     #[wasm_bindgen(constructor)]
-    pub fn new() -> Result<Issuer, JsValue> {
-        let (ipk, isk) = credential::init(rand::thread_rng());
-        let sk = SigningKey::new(rand::thread_rng());
+    pub fn new(attributes: usize, seed: &[u8]) -> Issuer {
+        let mut rng = if seed.len() != 32 {
+            ChaCha20Rng::from_rng(rand::thread_rng()).unwrap()
+        } else {
+            // generation from seed for evaluation
+            let seed: [u8;32] = seed.try_into().unwrap();
+            ChaCha20Rng::from_seed(seed)
+        };
+        let (ipk, isk) = credential::init(&mut rng, attributes);
+        let (csk, cvk) = pbss::Gen(&mut rng, 2, 1, "payment");
+        let sk = SigningKey::new(&mut rng);
         
-        Ok(Issuer {
+        Issuer {
+            attributes,
             signingKey: sk,
             publicKey: ipk,
-            secretKey: isk
-        })
+            secretKey: isk,
+            creditSigningKey: csk,
+            creditVerificationKey: cvk,
+            ledger: Ledger::default()
+        }
     }
 
     #[wasm_bindgen(getter)]
-    pub fn publicKey(&self) -> Result<JsValue, JsValue> {
+    pub fn attributes(&self) -> usize {
+        self.attributes
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn publicKey(&self) -> Result<Vec<u8>, JsError> {
         output(&self.publicKey)
     }
 
-    pub fn issueCredential(&self, request: JsValue) -> Result<JsValue, JsValue> {
+    #[wasm_bindgen(getter)]
+    pub fn verificationKey(&self) -> Result<Vec<u8>, JsError> {
+        output(&self.creditVerificationKey)
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn ledgerVerificationKey(&self) -> Result<Vec<u8>, JsError> {
+        let lvk: [u8; 32] = VerificationKey::from(&self.signingKey).into();
+        output(lvk)
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn ledger(&self) -> Result<Vec<u8>, JsError> {
+        output(&self.ledger)
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn head(&self) -> Result<Vec<u8>, JsError> {
+        output(&self.ledger.head)
+    }
+
+    #[wasm_bindgen]
+    pub fn load(&mut self, data: &[u8]) -> Result<(), JsError> {
+        let ledger: Ledger = input(&data)?;
+        self.ledger = ledger;
+        Ok(())
+    }
+
+    #[wasm_bindgen]
+    pub fn serialize(&self) -> Result<Vec<u8>, JsError> {
+        output(&self)
+    }
+
+    #[wasm_bindgen]
+    pub fn deserialize(data: &[u8]) -> Result<Issuer, JsError> {
+        input(data)
+    }
+
+    pub fn issueCredential(&self, request: &[u8]) -> Result<Vec<u8>, JsError> {
         let request: IssueRequest = input(request)?;
         let response = convert(credential::issue(&self.publicKey, &self.secretKey, &request))?;
-
         output(response)
     }
 
-    pub fn checkRewardSignature(reward: Reward, approvedKeys: JsValue) -> Result<bool, JsValue> {
-        let approvedKeys: Vec<String> = input(approvedKeys)?;
+    pub fn checkResourceSignature(&self, resource: &SignedResource, publicKey: &[u8]) -> Result<bool, JsError> {
+        let blob = output(resource.resource.clone())?;
+        let mut data = "resource:".as_bytes().to_vec();
+        data.extend_from_slice(&blob);
 
-        let mut data = reward.key.to_compressed().to_vec();
-        data.extend_from_slice(&reward.id.to_bytes());
-        data.push(reward.value);
+        let vk: VerificationKey = input(publicKey)?;
 
-        let mut k : [u8; 32] = [0; 32];
-        for key in approvedKeys {
-            convert(base64::decode_config_slice(key, base64::URL_SAFE_NO_PAD, &mut k))?;
-            let vk = convert(VerificationKey::try_from(k))?;
-            if vk.verify(&reward.signature, &data).is_ok() {
-                return Ok(true);
-            }
-        }
-
-        Ok(false)
+        Ok(vk.verify(&resource.signature, &data).is_ok())
     }
 
-    pub fn checkResourceSignature(&self, resource: &str, signature: &str, publicKey: &str) -> Result<bool, JsValue> {
-        let mut data = "resource:".as_bytes().to_vec();
-        data.extend_from_slice(resource.as_bytes());
-
-        let sig = convert(base64::decode_config(&signature, base64::URL_SAFE_NO_PAD))?;
-        let pk = convert(base64::decode_config(&publicKey, base64::URL_SAFE_NO_PAD))?;
-
-        let sig = TryInto::<[u8; 64]>::try_into(sig).ok().ok_or("invalid signature")?;
-        let pk = TryInto::<[u8; 32]>::try_into(pk).ok().ok_or("invalid pk")?;
+    pub fn issueReward(&mut self, participation: &ConfirmedParticipation, pk: &[u8], reward: u8) -> Result<LedgerEntry, JsError> {
+        let mut data = participation.id.as_bytes().to_vec();
+        let mut req = to_stdvec(&participation.request)?;
+        data.append(&mut req);
 
         let vk = convert(VerificationKey::try_from(pk))?;
-        Ok(vk.verify(&Signature::from(sig), &data).is_ok())
+        if vk.verify(&participation.signature, &data).is_err() {
+            Err(JsError::new("reward signature invalid"))?;
+        }
+        if participation.value != reward {
+            Err(JsError::new("reward amount does not match study"))?;
+        }
+
+        let coin = pbss::Sign(&self.creditVerificationKey, &self.creditSigningKey, &participation.request, thread_rng())?;
+        let tx = Transaction {
+            participation: participation.clone(),
+            coin
+        };
+        self.ledger.appendTransaction(&self.signingKey, tx)
     }
 
-    pub fn checkPayoutRequest(&self, request: JsValue, transactions: JsValue, spend: JsValue) -> Result<JsValue, JsValue> {
-        let proof: GenericProof::<PayoutProofInput> = input(request)?;
-        let transactions: HashSet<Transaction> = input(transactions)?;
-        let spend: HashSet<Tag> = input(spend)?;
+    pub fn issueNulls(&mut self, request: &[u8]) -> Result<Vec<u8>, JsError> {
+        let requests: Vec<BlindedSignRequest> = input(request)?;
+        let mut coins: Vec<BlindedSignature> = vec![];
 
-        if !proof.inputs.transactions.iter().filter(|tx| tx.value == 0).count() != MAX_INPUTS {
-            Err("invalid padding")?;
+        for req in requests {
+            if req.m.len() != 1 {
+                Err(JsError::new("request contains invalid amount of attributes"))?;
+            }
+            if req.m[0] != Scalar::zero() {
+                Err(JsError::new("value of request is not zero"))?;
+            }
+
+            coins.push(pbss::Sign(&self.creditVerificationKey, &self.creditSigningKey, &req, thread_rng())?);
         }
 
-        if !proof.inputs.transactions.iter().all(|tx| transactions.contains(tx) || tx.value == 0) {
-            Err("transaction set contains unknown transactions")?;
+        output(coins)
+    }
+
+    pub fn appendEntry(mut self, entry: LedgerEntry) -> Result<Issuer, JsError> {
+        let vk = VerificationKey::from(&self.signingKey);
+        self.ledger.verify(&vk, &entry)?;
+        Ok(self)
+    }
+
+    pub fn checkPayoutRequest(&mut self, request: &[u8]) -> Result<PayoutResult, JsError> {
+        let proof: GenericProof::<PayoutProofInput, Vec<RerandomizedProofResponse>> = input(request)?;
+
+        if proof.inputs.inputs.len() != MAX_INPUTS {
+            Err(JsError::new("invalid padding"))?;
         }
 
-        if proof.inputs.nullifier.iter().any(|tx| spend.contains(tx)) {
-            Err("used inputs are already spend")?;
+        if proof.inputs.cvk != self.creditVerificationKey {
+            Err(JsError::new("invalid public key"))?;
         }
 
         let mut verifier_transcript = Transcript::new(b"payout");
@@ -131,9 +212,12 @@ impl Issuer {
         let inputs = convert(to_stdvec(&proof.inputs))?;
         data.extend_from_slice(&inputs);
 
-        let sig: [u8; 64] = self.signingKey.sign(&data).into();
-        let receipt = base64::encode_config(&sig, base64::URL_SAFE_NO_PAD);
+        let entry = self.ledger.appendPayout(&self.signingKey, Payout::from(&proof))?;
 
-        output(receipt)
+        Ok(PayoutResult {
+            entry: entry,
+            target: proof.inputs.target.clone(),
+            recipient: proof.inputs.recipient.clone()
+        })
     }
 }
