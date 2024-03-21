@@ -21,6 +21,11 @@
 
                 <v-spacer />
 
+                <v-btn to="/payouts" color="warning" class="mr-3">
+                  <v-icon left>mdi-bug</v-icon>
+                  Payouts Log
+                </v-btn>
+
                 <v-btn @click="clearSessions()">
                   <v-icon left>mdi-bug</v-icon>
                   Clear Local Sessions
@@ -95,7 +100,10 @@ export default {
   created() {
     this.$root.$alert = (title, message = '', options = {}) => this.open(title, message, Object.assign({ alert: true }, options));
     this.$root.$confirm = (title, message = '', options = {}) => this.open(title, message, options);
-    this.$root.$handleError = (e) => this.open('An error occurred!', e?.response?.data?.error || e?.message || '', { alert: true, type: 'error' });
+    this.$root.$handleError = (e) => {
+      console.log(e);
+      this.open('An error occurred!', e?.response?.data?.error || e?.message || '', { alert: true, type: 'error' });
+    };
     this.$root.$prompt = async(title, input = '', options = {}) => {
       const r = await this.open(title, input, Object.assign({ prompt: true }, options));
       return r ? this.message : r;
@@ -146,6 +154,8 @@ export default {
       Object.keys(localStorage)
         .filter(e => e.startsWith('participant:') || e.startsWith('organizer:'))
         .forEach(e => localStorage.removeItem(e));
+      localStorage.removeItem('credential');
+      localStorage.removeItem('keys');
       location.reload();
     }
   },

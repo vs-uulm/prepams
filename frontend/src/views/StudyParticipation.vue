@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="participation" persistent max-width="400" scrollable>
+  <v-dialog :value="participation || loading" persistent max-width="400" scrollable>
     <v-card>
       <v-card-title class="text-h5 grey lighten-2">
         <v-icon left>mdi-qrcode-scan</v-icon>
@@ -13,7 +13,8 @@
       </v-card-title>
 
       <v-card-text class="pt-4">
-        <v-list dense>
+        <v-progress-linear indeterminate v-if="loading" />
+        <v-list dense v-else>
           <v-list-item v-if="study">
             <v-list-item-icon>
               <v-icon>mdi-clipboard-edit-outline</v-icon>
@@ -78,8 +79,8 @@ export default {
 
   computed: {
     study() {
-      if (this.participation?.id) {
-        return this.$parent.studies.find(e => e.id === this.participation.id);
+      if (this.participation?.study) {
+        return this.$parent.studies.find(e => e.id === this.participation.study);
       }
       return null;
     },
@@ -92,18 +93,29 @@ export default {
   methods: {
     async reload() {
       if (this.$store.state.user?.role !== 'organizer') {
+        await this.$root.$alert(
+          'Only possible with Organizer Account!',
+          `Only the study organizers are able to verify and complete a participation. Make sure you are signed into the correct account before to complete this participation.`,
+          { type: 'warning' }
+        );
+
         return;
       }
 
       try {
         await this.$parent.loaded;
+        this.loading = true;
         this.participation = await this.$store.dispatch('checkParticipation', {
           id: this.$route.params.id,
           key: location.hash.slice(1)
         });
+
+        this.completed = !!this.participation?.rewarded;
+        this.loading = false;
       } catch (e) {
         this.$root.$handleError(e);
         this.participationValid = false;
+        this.loading = false;
       }
     },
 

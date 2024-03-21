@@ -61,20 +61,69 @@
                 </v-list-item>
                 <v-alert class="ma-2" outlined dense type="error" v-if="errors[mode]">{{ errors[mode].join('') }}</v-alert>
               </v-list>
+
+              <v-list>
+                <v-subheader>
+                  Attribute Constraints
+                  <small class="info--text ml-2 mb-1">
+                    <v-icon small color="info">mdi-information-outline</v-icon>
+                    Participants have to satisfy ALL of these attribute constraints.
+                  </small>
+                </v-subheader>
+
+                <v-list-item v-for="([e, t, params], i) in study.attributes" :key="i" class="info lighten-4">
+                  <v-list-item-icon>
+                    <v-icon>mdi-chart-box-plus-outline</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ attributes[e][0] }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle v-if="t === 'number'">
+                      <b>{{ params[0] }}</b>
+                      <v-icon class="mx-2" small>mdi-less-than-or-equal</v-icon>
+                      <b>{{ attributes[e][0] }}</b>
+                      <v-icon class="mx-2" small>mdi-less-than-or-equal</v-icon>
+                      <b>{{ params[1] }}</b>
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle v-else-if="t === 'select'">
+                      <span class="text-h6 pl-1 pr-2">∈</span>
+                      <b>&lcub; {{ params.map(i => attributes[e][2][i]).join(', ') }} &rcub;</b>
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+
+                  <v-list-item-action>
+                    <v-btn icon @click="deleteAttributeConstraint(i)">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </v-list-item-action>
+                </v-list-item>
+              </v-list>
             </v-card-text>
 
             <v-card-actions>
               <v-spacer />
 
+              <attribute-constraint @add="addAttributeConstraint" :attributes="attributes" v-if="attributes" />
+
               <v-menu offset-y v-for="mode in ['qualifier', 'disqualifier']" :key="mode">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn :color="mode === 'qualifier' ? 'success' : 'error'" small v-bind="attrs" v-on="on"
-                    class="pr-4 ml-3">
+                  <v-btn :color="mode === 'qualifier' ? 'success' : 'error'" small v-bind="attrs" v-on="on" class="pr-4 ml-3">
                     <v-icon left small>{{ mode === 'qualifier' ? 'mdi-plus' : 'mdi-cancel' }}</v-icon>
                     Add {{ mode }}
                   </v-btn>
                 </template>
                 <v-list>
+                  <v-list-item v-if="!studies || !Object.keys(studies).length" disabled>
+                    <v-list-item-icon>
+                      <v-icon>mdi-emoticon-confused-outline</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>No Data...</v-list-item-title>
+                      <v-list-item-subtitle>You don't have access to any other studies</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
                   <v-list-item v-for="(study, index) in studies" :key="index" @click="addPrerequisite(mode, study.id)">
                     <v-list-item-content>
                       <v-list-item-title>{{ study.name }}</v-list-item-title>
@@ -106,13 +155,19 @@
 
 <script>
 import axios from 'axios';
+import AttributeConstraint from '@/components/AttributeConstraint';
 
 export default {
   name: 'StudyForm',
 
+  components: {
+    AttributeConstraint
+  },
+
   data() {
     return {
       loading: false,
+      attributes: null,
       studies: {},
 
       desc: {
@@ -127,6 +182,7 @@ export default {
         duration: '',
         reward: 0,
         qualifier: [],
+        attributes: [],
         disqualifier: [],
         webBased: false,
         studyURL: '',
@@ -146,7 +202,7 @@ export default {
     };
   },
 
-  mounted() {
+  async mounted() {
     if (!this.$store.state.user) {
       this.$router.push('/studies');
     }
@@ -184,7 +240,17 @@ export default {
     addPrerequisite(mode, study) {
       if (!this.study[mode].includes(study)) {
         this.study[mode].push(study);
+        this.study[mode].sort();
       }
+    },
+
+    addAttributeConstraint(e) {
+      this.study.constraints.push(e);
+      this.study.constraints.sort((a, b) => a[0] - b[0]);
+    },
+
+    deleteAttributeConstraint(index) {
+      this.study.constraints.splice(index, 1);
     },
 
     delPrerequisite(mode, study) {
@@ -195,8 +261,13 @@ export default {
     },
 
     async reload() {
-      const res = await axios.get(`/api/studies/?id=${this.$store.state.user?.id}`);
-      for (const study of res.data) {
+      const [studies, attributes] = await Promise.all([
+        axios.get(`/api/studies/?id=${this.$store.state.user?.id}`),
+        axios.get('/api/issuer/attributes')
+      ]);
+
+      this.attributes = attributes.data;
+      for (const study of studies.data) {
         this.$set(this.studies, study.id, study);
       }
     },

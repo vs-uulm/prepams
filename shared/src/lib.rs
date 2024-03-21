@@ -1,9 +1,10 @@
-mod serialization;
-mod external;
-mod zksnark;
-mod types;
+extern crate simple_error;
 
-mod bindings;
-mod prerequisites;
+mod pbss;
+mod serialization;
+pub mod proofs;
 mod credential;
-mod payout;
+pub mod external;
+pub mod types;
+pub mod bindings;
+

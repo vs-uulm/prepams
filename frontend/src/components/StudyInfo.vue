@@ -19,7 +19,7 @@
         mdi-sticker-check-outline
       </v-icon>
       {{ study.participations.length }}
-      completed participation{{ study.participations.length > 1 ? 's' : '' }}
+      completed participation{{ study.participations.length !== 1 ? 's' : '' }}
     </v-chip>
   </div>
 </template>

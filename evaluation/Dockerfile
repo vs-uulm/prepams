@@ -1,4 +1,4 @@
-FROM node:18.8.0
+FROM node:20.10.0
 
 RUN apt-get update && apt-get install -y \
     gconf-service \

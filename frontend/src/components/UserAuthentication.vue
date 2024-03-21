@@ -13,6 +13,9 @@
           </v-list-item-content>
         </v-list-item>
       </template>
+      <template #selection="{item}">
+        <span :class="{ blurry: hide }">{{ item && item.id ? item.id : '' }}</span>
+      </template>
       <template #message>
         <div class="d-flex">
           <div>
@@ -134,20 +137,29 @@
     <v-card class="mb-4" v-if="$store.state.user">
       <v-card-title>
         <v-icon left>mdi-wallet</v-icon>
-        {{ $store.state.user.id }}
+        <span :class="{blurry: hide}">{{ $store.state.user.id }}</span>
 
         <v-spacer />
 
         <v-progress-circular :indeterminate="loading" v-if="loading" />
+        <v-icon @click="hide = !hide">{{ hide ? 'mdi-eye-outline' : 'mdi-eye-off-outline' }}</v-icon>
       </v-card-title>
 
-      <v-card-text v-if="$store.state.user.role === 'participant'">
+      <v-card-text v-if="$store.state.user.role === 'participant'" :class="{ blurry: hide }">
         <v-chip class="ma-2 px-4" color="primary" outlined pill close-icon="mdi-refresh" close @click:close="refreshBalance()">
           <v-icon left>
             mdi-database
           </v-icon>
 
           Balance: {{ $store.state.user.balance }}
+        </v-chip>
+        <v-chip v-for="([attr, type, ...params], i) in attributes" :key="i" label class="ma-2 mt-n1 px-4 d-inline-block" outlined color="secondary">
+          <v-icon left>
+            mdi-chart-box-outline
+          </v-icon>
+
+          <b>{{attr}}:&nbsp;</b>
+          {{ type === 'select' ? params[0][$store.state.user.attributes[i]] : $store.state.user.attributes[i] }}
         </v-chip>
       </v-card-text>
 
@@ -209,7 +221,7 @@
                 </div>
               </v-col>
               <v-col cols="12" md="7">
-                <v-img :src="recoveryCode" contain />
+                <v-img :src="recoveryFile" contain />
               </v-col>
             </v-row>
           </v-card-text>
@@ -233,8 +245,7 @@
               autocomplete="username" :disabled="switching" v-if="mode !== 'unlock'" />
 
             <v-text-field outlined prepend-inner-icon="mdi-shield-key-outline" type="password" label="Password"
-              v-model="password" :error-messages="errors" autofocus
-              :autocomplete="mode === 'signup' || mode === 'signin' ? 'new-password' : 'password'" />
+              v-model="password" :error-messages="errors" autofocus :autocomplete="mode === 'signup' || mode === 'signin' ? 'new-password' : 'password'" />
 
             <v-alert outlined type="info" dense v-if="mode === 'signup'">
               When you don't use PrePaMS for a while, we will lock your account to prevent misuse.
@@ -246,6 +257,29 @@
               When you don't use PrePaMS for a while, we will lock your account to prevent misuse.
               Enter your password to unlock your account.
             </v-alert>
+
+            <v-card outlined v-if="attributes && (mode === 'signup' || mode === 'signin') && role === 'participant'">
+              <v-card-text>
+                <div class="text-overline mb-2 mt-n2">
+                  ATTRIBUTES
+                </div>
+
+                <template v-for="([attr, type, ...params], i) in attributes">
+                  <v-text-field v-if="type === 'number'" :key="`n${i}`" outlined dense type="number" :label="attr" :rules="[
+                    v => params[0] === undefined || Number(v) >= params[0] || `value has to be at least ${params[0]}`,
+                    v => params[1] === undefined || Number(v) <= params[1] || `value has to be at most ${params[1]}`
+                  ]" v-model="values[i]" :autocomplete="false" class="mb-2" />
+
+                  <v-select v-if="type === 'select'" :key="`s${i}`" outlined dense :label="attr" :items="params[0].map((e, i) => ({ text: e, value: i}))" v-model="values[i]" />
+                </template>
+
+                <v-alert outlined type="info" dense class="mb-n1">
+                  These attributes will help researchers select an appropriate sample for their studies.
+                  They are provided to the credential issuer during registration so that they can verify the values you provide.
+                  In return, you will receive a signed certificate which allows you to prove the above values anonymously without disclosing the values and your identity to researchers.
+                </v-alert>
+              </v-card-text>
+            </v-card>
           </v-card-text>
 
           <v-divider />
@@ -253,8 +287,7 @@
           <v-card-actions>
             <v-spacer />
             <v-btn type="submit" @click="submit()" color="primary" text :loading="loading" :disabled="loading">
-              {{ recoveryCode ? 'Finish' : mode === 'signup' ? 'Request Account' : mode === 'signin' ? 'sign in with password'
-              : 'Unlock' }}
+              {{ recoveryCode ? 'Finish' : mode === 'signup' ? 'Request Account' : mode === 'signin' ? 'sign in with password' : 'Unlock' }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -274,14 +307,17 @@
 
 <script>
 import jsQR from 'jsqr';
+import axios from 'axios';
 
 export default {
   name: 'UserAuthentication',
 
   data: () => ({
+    hide: false,
     scanning: false,
     scanDialog: false,
     scanCanvas: null,
+    attributes: null,
 
     dialog: false,
     switching: false,
@@ -306,12 +342,21 @@ export default {
     role: 'participant',
     id: '',
     password: '',
+    values: [],
     errors: []
   }),
 
   async mounted() {
+    const res = await axios.get('/api/issuer/attributes');
+    this.attributes = res.data;
+
     if (localStorage.getItem('credential')) {
       setTimeout(() => this.switchAccount(localStorage.getItem('credential')), 250);
+    } else {
+      this.id = 'mail@example.com';
+      this.password = 'example';
+      this.values = ['1993', 1];
+      this.signUp();
     }
   },
 
@@ -355,7 +400,8 @@ export default {
         const res = await this.$store.dispatch(this.mode === 'signup' ? this.mode : 'signin', {
           id: this.id,
           role: this.role,
-          password: this.password
+          password: this.password,
+          attributes: this.values
         });
         this.password = '';
 
@@ -366,7 +412,12 @@ export default {
           this.dialog = false;
         }
       } catch (e) {
-        this.errors = [typeof e === 'string' ? e : e.message];
+        console.log(e);
+        if (e?.request?.response) {
+          this.errors = [JSON.parse(e?.request?.response)?.error];
+        } else {
+          this.errors = [typeof e === 'string' ? e : e.message];
+        }
       } finally {
         this.loading = false;
       }
@@ -420,7 +471,12 @@ export default {
         }
 
         await this.$store.dispatch('recover', code.binaryData);
+        this.scanDialog = false;
+        this.loading = false;
+        this.dialog = false;
+        this.scanning = false;
       } catch (e) {
+        console.log(e);
         this.loading = false;
         this.scanning = false;
         await this.$root.$alert(`Error: Failed to Recover Account`, e.message, { type: 'error' });
@@ -443,10 +499,8 @@ export default {
               await this.$store.dispatch('recover', code.binaryData);
               this.scanDialog = false;
               this.loading = false;
-              this.dialog = true;
-              this.mode = 'signin';
+              this.dialog = false;
               this.scanning = false;
-              this.loading = true;
             } catch (e) {
               await this.$root.$alert(`Error: Failed to Recover Account`, e.message, { type: 'error' });
             }
@@ -460,6 +514,7 @@ export default {
       try {
         await this.$store.dispatch('switchAccount', id);
       } catch (e) {
+        console.log(e);
         if (e.role) {
           this.id = id;
           this.dialog = 'true';
@@ -532,6 +587,7 @@ export default {
           if (res?.receipt) {
             const receipt = res.receipt.match(/.{1,43}/g).join('\n');
             await this.$root.$alert('Payout Receipt', receipt, {
+              width: '600px',
               type: 'info',
               style: {
                 fontFamily: 'monospace',
@@ -592,7 +648,7 @@ export default {
           }
         }
       } else {
-        if (this.$refs.video.srcObject) {
+        if (this.$refs.video?.srcObject) {
           this.$refs.video.srcObject.getTracks()[0].stop();
         }
       }
@@ -600,3 +656,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.blurry {
+  filter: blur(8px);
+}
+</style>

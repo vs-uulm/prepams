@@ -1,0 +1,52 @@
+version: "3.0"
+
+services:
+  backend:
+    image: backend
+    restart: unless-stopped
+    build: .
+    volumes:
+      - ./backend_env:/prepams/backend/.env
+      - ./prepams.db:/prepams/backend/prepams.db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`prepams.example.org`) && PathPrefix(`/api/`)"
+      - "traefik.http.routers.api.service=api"
+      - "traefik.http.services.api.loadbalancer.server.port=8080"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=myresolver"
+      - "traefik.http.routers.eval.rule=Host(`prepams.example.org`) && PathPrefix(`/post`)"
+      - "traefik.http.routers.eval.service=eval"
+      - "traefik.http.services.eval.loadbalancer.server.port=8081"
+      - "traefik.http.routers.eval.entrypoints=websecure"
+      - "traefik.http.routers.eval.tls.certresolver=myresolver"
+
+  frontend:
+    image: frontend
+    restart: unless-stopped
+    build:
+      dockerfile: Dockerfile.frontend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ui.rule=Host(`prepams.example.org`)"
+      - "traefik.http.routers.ui.entrypoints=websecure"
+      - "traefik.http.routers.ui.tls.certresolver=myresolver"
+
+  traefik:
+    image: "traefik"
+    restart: unless-stopped
+    container_name: "traefik"
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=mail@example.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"  
+

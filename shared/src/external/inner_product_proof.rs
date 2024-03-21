@@ -3,7 +3,6 @@
 
 extern crate alloc;
 
-use std::convert::TryInto;
 use core::iter;
 use alloc::vec::Vec;
 use alloc::borrow::Borrow;
@@ -11,103 +10,23 @@ use alloc::borrow::Borrow;
 use group::Curve;
 use merlin::Transcript;
 use bls12_381::{G1Affine, G1Projective, Scalar};
-use serde::{Serialize, Deserialize, Serializer, Deserializer};
-use serde::ser::SerializeSeq;
-use serde::de::{Visitor, SeqAccess};
+use serde::{Serialize, Deserialize};
+use serde_with::serde_as;
 
-use super::error::ProofError;
+use crate::types::ProofError;
 use super::transcript::TranscriptProtocol;
 
-#[derive(Clone, Debug)]
+#[serde_as]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct InnerProductProof {
+    #[serde_as(as = "Vec<crate::serialization::SerializableG1Affine>")]
     pub(crate) L_vec: Vec<G1Affine>,
+    #[serde_as(as = "Vec<crate::serialization::SerializableG1Affine>")]
     pub(crate) R_vec: Vec<G1Affine>,
+    #[serde(with = "crate::serialization::Scalar")]
     pub(crate) a: Scalar,
+    #[serde(with = "crate::serialization::Scalar")]
     pub(crate) b: Scalar,
-}
-
-impl Serialize for InnerProductProof {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
-        let mut seq = serializer.serialize_seq(Some(2 + self.L_vec.len() * 2))?;
-        // seq.serialize_element
-        seq.serialize_element(&base64::encode_config(&self.a.to_bytes(), base64::URL_SAFE_NO_PAD))?;
-        seq.serialize_element(&base64::encode_config(&self.b.to_bytes(), base64::URL_SAFE_NO_PAD))?;
-
-        for (l, r) in self.L_vec.iter().zip(&self.R_vec) {
-            seq.serialize_element(&base64::encode_config(l.to_compressed(), base64::URL_SAFE_NO_PAD))?;
-            seq.serialize_element(&base64::encode_config(r.to_compressed(), base64::URL_SAFE_NO_PAD))?;
-        }
-        seq.end()
-    }
-}
-
-struct InnerProductProofDeserializer;
-
-impl<'de> Visitor<'de> for InnerProductProofDeserializer {
-    type Value = InnerProductProof;
-
-    fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter.write_str("InnerProoductProof")
-    }
-
-    fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error> where A: SeqAccess<'de> {
-        let mut tmp = InnerProductProof {
-            L_vec: vec![],
-            R_vec: vec![],
-            a: Scalar::zero(),
-            b: Scalar::zero()
-        };
-
-        if let (Some(a), Some(b)) = (seq.next_element::<&str>()?, seq.next_element::<&str>()?) {
-            if let (Ok(a), Ok(b)) = (base64::decode_config(a, base64::URL_SAFE_NO_PAD), base64::decode_config(b, base64::URL_SAFE_NO_PAD)) {
-                if let (Ok(a), Ok(b)) = (TryInto::<[u8; 32]>::try_into(a), TryInto::<[u8; 32]>::try_into(b)) {
-                    let a = Scalar::from_bytes(&a);
-                    let b = Scalar::from_bytes(&b);
-
-                    if a.is_none().into() || b.is_none().into() {
-                        return Err(serde::de::Error::custom("invalid scalars"));
-                    }
-
-                    tmp.a = a.unwrap();
-                    tmp.b = b.unwrap();
-
-                    while let Some(left) = seq.next_element::<&[u8]>()? {
-                        if let Some(right) = seq.next_element::<&[u8]>()? {
-                            if let (Ok(left), Ok(right)) = (base64::decode_config(left, base64::URL_SAFE_NO_PAD), base64::decode_config(right, base64::URL_SAFE_NO_PAD)) {
-                                if let (Ok(left), Ok(right)) = (TryInto::<[u8; 48]>::try_into(left), TryInto::<[u8; 48]>::try_into(right)) {
-                                    let l = G1Affine::from_compressed(&left);
-                                    let r = G1Affine::from_compressed(&right);
-
-                                    if l.is_none().into() || r.is_none().into() {
-                                        return Err(serde::de::Error::custom("invalid point"));
-                                    }
-
-                                    tmp.L_vec.push(l.unwrap());
-                                    tmp.R_vec.push(r.unwrap());
-                                } else {
-                                    return Err(serde::de::Error::custom("invalid point"));
-                                }
-                            } else {
-                                return Err(serde::de::Error::custom("invalid point"));
-                            }
-                        } else {
-                            return Err(serde::de::Error::missing_field("right missing"));
-                        }
-                    }
-
-                    return Ok (tmp);
-                }
-            }
-        }
-
-        return Err(serde::de::Error::missing_field("scalars missing"));
-    }
-}
-
-impl<'de> Deserialize<'de> for InnerProductProof {
-    fn deserialize<D>(deserializer: D) -> Result<InnerProductProof, D::Error> where D: Deserializer<'de> {
-        deserializer.deserialize_seq(InnerProductProofDeserializer)
-    }
 }
 
 pub fn vartime_multiscalar_mul<I, J>(scalars: I, points: J) -> G1Affine
@@ -117,7 +36,11 @@ pub fn vartime_multiscalar_mul<I, J>(scalars: I, points: J) -> G1Affine
         J: IntoIterator,
         J::Item: Borrow<G1Affine>,
     {
-        scalars.into_iter().zip(points.into_iter()).map(|(l, r)| r.borrow() * l.borrow()).sum::<G1Projective>().to_affine()
+        // I multiplications, I additions
+        scalars.into_iter()
+            .zip(points.into_iter())
+            .fold(G1Projective::identity(), |a, (l, r)| a + r.borrow() * l.borrow())
+            .to_affine()
     }
 
 impl InnerProductProof {
@@ -163,7 +86,7 @@ impl InnerProductProof {
         // All of the input vectors must have a length that is a power of two.
         assert!(n.is_power_of_two());
 
-        transcript.innerproduct_domain_sep(n as u64);
+        transcript.append_u64(b"ipp_n", n as u64);
 
         let lg_n = n.next_power_of_two().trailing_zeros() as usize;
         let mut L_vec = Vec::with_capacity(lg_n);
@@ -210,8 +133,8 @@ impl InnerProductProof {
             L_vec.push(L.clone());
             R_vec.push(R.clone());
 
-            transcript.append_point(b"L", &L);
-            transcript.append_point(b"R", &R);
+            transcript.append_g1(b"L", &L);
+            transcript.append_g1(b"R", &R);
 
             let u = transcript.challenge_scalar(b"u");
             let u_inv = u.invert().unwrap();
@@ -258,8 +181,8 @@ impl InnerProductProof {
             L_vec.push(L.clone());
             R_vec.push(R.clone());
 
-            transcript.append_point(b"L", &L);
-            transcript.append_point(b"R", &R);
+            transcript.append_g1(b"L", &L);
+            transcript.append_g1(b"R", &R);
 
             let u = transcript.challenge_scalar(b"u");
             let u_inv = u.invert().unwrap();
@@ -303,14 +226,18 @@ impl InnerProductProof {
             return Err(ProofError::VerificationError);
         }
 
-        transcript.innerproduct_domain_sep(n as u64);
+        transcript.append_u64(b"ipp_n", n as u64);
 
         // 1. Recompute x_k,...,x_1 based on the proof transcript
 
         let mut challenges = Vec::with_capacity(lg_n);
         for (L, R) in self.L_vec.iter().zip(self.R_vec.iter()) {
-            transcript.validate_and_append_point(b"L", L)?;
-            transcript.validate_and_append_point(b"R", R)?;
+            if L.is_identity().into() || R.is_identity().into() {
+                Err(ProofError::VerificationError)?;
+            }
+
+            transcript.append_g1(b"L", L);
+            transcript.append_g1(b"R", R);
             challenges.push(transcript.challenge_scalar(b"u"));
         }
 
@@ -445,67 +372,6 @@ impl InnerProductProof {
         buf.extend_from_slice(&self.b.to_bytes());
         buf
     }
-
-    /*
-    /// Converts the proof into a byte iterator over serialized view of the proof.
-    /// The layout of the inner product proof is:
-    /// * \\(n\\) pairs of compressed Ristretto points \\(L_0, R_0 \dots, L_{n-1}, R_{n-1}\\),
-    /// * two scalars \\(a, b\\).
-    #[inline]
-    pub(crate) fn to_bytes_iter(&self) -> impl Iterator<Item = u8> + '_ {
-        self.L_vec
-            .iter()
-            .zip(self.R_vec.iter())
-            .flat_map(|(l, r)| l.to_compressed().iter().chain(&r.to_compressed()))
-            .chain(self.a.to_bytes())
-            .chain(self.b.to_bytes())
-            .copied()
-    }
-    */
-
-    /*
-    /// Deserializes the proof from a byte slice.
-    /// Returns an error in the following cases:
-    /// * the slice does not have \\(2n+2\\) 32-byte elements,
-    /// * \\(n\\) is larger or equal to 32 (proof is too big),
-    /// * any of \\(2n\\) points are not valid compressed Ristretto points,
-    /// * any of 2 scalars are not canonical scalars modulo Ristretto group order.
-    pub fn from_bytes(slice: &[u8]) -> Result<InnerProductProof, ProofError> {
-        let b = slice.len();
-        if b % 32 != 0 {
-            return Err(ProofError::FormatError);
-        }
-        let num_elements = b / 32;
-        if num_elements < 2 {
-            return Err(ProofError::FormatError);
-        }
-        if (num_elements - 2) % 2 != 0 {
-            return Err(ProofError::FormatError);
-        }
-        let lg_n = (num_elements - 2) / 2;
-        if lg_n >= 32 {
-            return Err(ProofError::FormatError);
-        }
-
-        use super::util::read32;
-
-        let mut L_vec: Vec<G1Affine> = Vec::with_capacity(lg_n);
-        let mut R_vec: Vec<G1Affine> = Vec::with_capacity(lg_n);
-        for i in 0..lg_n {
-            let pos = 2 * i * 32;
-            L_vec.push(G1Affine::from_bytes(read32(&slice[pos..])));
-            R_vec.push(G1Affine::from_bytes(read32(&slice[pos + 32..])));
-        }
-
-        let pos = 2 * lg_n * 32;
-        let a =
-            Scalar::from_canonical_bytes(read32(&slice[pos..])).ok_or(ProofError::FormatError)?;
-        let b = Scalar::from_canonical_bytes(read32(&slice[pos + 32..]))
-            .ok_or(ProofError::FormatError)?;
-
-        Ok(InnerProductProof { L_vec, R_vec, a, b })
-    }
-    */
 }
 
 /// Computes an inner product of two vectors
@@ -533,10 +399,8 @@ mod tests {
     use bls12_381::hash_to_curve::{HashToCurve, ExpandMsgXmd};
 
     fn test_helper_create(n: usize) {
-        use super::super::generators::BulletproofGens;
-        let bp_gens = BulletproofGens::new(n, 1);
-        let G: Vec<G1Affine> = bp_gens.share(0).G(n).cloned().collect();
-        let H: Vec<G1Affine> = bp_gens.share(0).H(n).cloned().collect();
+        let G: Vec<G1Affine> = (0..n).map(|i| <G1Projective as HashToCurve<ExpandMsgXmd<sha2::Sha256>>>::hash_to_curve(b"testG", &i.to_be_bytes()).to_affine()).collect();
+        let H: Vec<G1Affine> = (0..n).map(|i| <G1Projective as HashToCurve<ExpandMsgXmd<sha2::Sha256>>>::hash_to_curve(b"testH", &i.to_be_bytes()).to_affine()).collect();
 
         // Q would be determined upstream in the protocol, so we pick a random one.
         let Q = <G1Projective as HashToCurve<ExpandMsgXmd<sha2::Sha256>>>::hash_to_curve(b"test", b"point").to_affine();
@@ -591,23 +455,6 @@ mod tests {
                 &H
             )
             .is_ok());
-
-        /*
-        let proof = InnerProductProof::from_bytes(proof.to_bytes().as_slice()).unwrap();
-        let mut verifier = Transcript::new(b"innerproducttest");
-        assert!(proof
-            .verify(
-                n,
-                &mut verifier,
-                iter::repeat(Scalar::one()).take(n),
-                util::exp_iter(y_inv).take(n),
-                &P,
-                &Q,
-                &G,
-                &H
-            )
-            .is_ok());
-        */
     }
 
     #[test]

@@ -9,7 +9,7 @@
 
         <v-spacer />
 
-        <v-btn icon @click="$router.back()" :disabled="loading || (participationCode && !participationCodeSaved && !urlCopied)">
+        <v-btn icon @click="close()" :disabled="loading || (participationCode && !participationCodeSaved && !urlCopied)">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -41,7 +41,7 @@
           </v-card-text>
         </v-card>
 
-        <v-card outlined class="mt-4" v-if="qualifier.length > 0 || disqualifier.length > 0">
+        <v-card outlined class="mt-4" v-if="qualifier.length > 0 || disqualifier.length > 0 || study.constraints.length > 0">
           <v-card-text class="pa-4 pb-3">
             <div class="text-overline mb-0 mt-n2">
               Prerequisites
@@ -88,6 +88,36 @@
                   </v-list-item-title>
                   <v-list-item-subtitle>
                     id: {{ study.id }}
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-list-item v-for="([e, t, params], i) in study.constraints" :key="`a${i}`">
+                <v-list-item-icon>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-icon color="info" v-bind="attrs" v-on="on">
+                        mdi-information-outline
+                      </v-icon>
+                    </template>
+                    <span>Attribute Constraint: Participants have to satisfy ALL of these attribute constraints.</span>
+                  </v-tooltip>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ attributes[e][0] }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle v-if="t === 'number'">
+                    <b>{{ params[0] }}</b>
+                    <v-icon class="mx-2" small>mdi-less-than-or-equal</v-icon>
+                    <b>{{ attributes[e][0] }}</b>
+                    <v-icon class="mx-2" small>mdi-less-than-or-equal</v-icon>
+                    <b>{{ params[1] }}</b>
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle v-else-if="t === 'select'" class="mt-n2">
+                    <span class="text-subtitle-1 pl-1 pr-2">∈</span>
+                    <b>&lcub; {{ params.map(i => attributes[e][2][i]).join(', ') }} &rcub;</b>
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -172,6 +202,7 @@ export default {
   data() {
     return {
       loading: false,
+      attributes: null,
 
       qualifier: [],
       disqualifier: [],
@@ -190,6 +221,7 @@ export default {
         reward: 0,
         qualifier: [],
         disqualifier: [],
+        constraints: [],
         webBased: false,
         studyURL: '',
         details: null
@@ -204,6 +236,11 @@ export default {
 
   methods: {
     async reload() {
+      await this.$parent.loaded;
+
+      const req = await axios.get('/api/issuer/attributes');
+      this.attributes = req.data;
+
       const study = this.$parent.studies.find(e => e.id === this.$route.params.id);
       if (!study) {
         await this.$root.$alert('Error: Study Not Found!', '\n', { type: 'error' });
@@ -287,6 +324,10 @@ export default {
       setTimeout(() => {
         this.urlCopied = false;
       }, 5000);
+    },
+
+    close() {
+      this.$router.push(this.$route.fullPath.startsWith('/studies') ? '/studies' : '/');
     }
   },
 
