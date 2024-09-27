@@ -1,14 +1,20 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
+  "name": "prepams-backend",
+  "version": "1.2.0",
   "description": "PrePaMS server application",
+  "repository": "github:vs-uulm/prepams",
+  "url": "https://github.com/vs-uulm/prepams/issues",
   "main": "index.js",
+  "license": "AGPL-3.0-or-later",
+  "author": "Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)",
+  "contributors": [
+    "Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)"
+  ],
   "scripts": {
     "start": "node index.js",
     "serve": "nodemon index.js --watch ../shared/pkg --watch ./src --watch ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "license": "MIT",
   "private": true,
   "dependencies": {
     "dotenv": "^16.3.2",

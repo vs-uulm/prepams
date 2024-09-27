@@ -1,30 +1,46 @@
 use bls12_381::G1Affine;
 use base64::{encode_config, decode_config};
-use serde::{Serialize, Deserialize, Serializer, Deserializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::de::{self, Visitor};
 use serde_with::{SerializeAs, DeserializeAs};
 use simple_error::SimpleError;
 
 pub fn serialize<S: Serializer>(p: &G1Affine, serializer: S) -> Result<S::Ok, S::Error> {
-    to_string(p).serialize(serializer)
+    let a: [u8; 48] = p.to_compressed();
+    serializer.serialize_bytes(&a)
 }
-pub fn to_string(p: &G1Affine) -> String {
-    base64::encode_config(p.to_compressed(), base64::URL_SAFE_NO_PAD)
-}
-pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<G1Affine, D::Error> {
-    let s: String = Deserialize::deserialize(deserializer)?;
-    match base64::decode_config(s, base64::URL_SAFE_NO_PAD) {
-        Err(e) => Err(serde::de::Error::custom(e.to_string())),
-        Ok(vec) => {
-            let arr: [u8; 48] = vec.try_into().ok().ok_or(serde::de::Error::custom(""))?;
-            let p = G1Affine::from_compressed(&arr);
 
+struct G1AffineVisitor;
+
+impl<'de> Visitor<'de> for G1AffineVisitor {
+    type Value = G1Affine;
+
+    fn expecting(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
+        formatter.write_str("a byte slice with 48 bytes")
+    }
+
+    fn visit_bytes<E>(self, value: &[u8]) -> Result<Self::Value, E> where E: de::Error {
+        if value.len() != 48 {
+            Err(E::custom(format!("slice length is out of range: {}", value.len())))
+        } else {
+            let arr: &[u8; 48] = value.try_into().unwrap();
+            let p = G1Affine::from_compressed(arr);
             if p.is_none().into() {
-                Err(serde::de::Error::custom(""))
+                Err(E::custom("not a valid curve point"))
             } else {
-                Ok(p.unwrap())
+                let p = p.unwrap();
+                if p.is_on_curve().into() {
+                    Ok(p)
+                } else {
+                    Err(E::custom("point is not on curve"))
+                }
             }
         }
     }
+}
+
+pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<G1Affine, D::Error> {
+    deserializer.deserialize_bytes(G1AffineVisitor)
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -71,5 +87,23 @@ impl SerializableG1Affine {
     #[allow(dead_code)]
     pub fn to_string(s: &G1Affine) -> String {
         encode_config(s.to_compressed(), base64::URL_SAFE_NO_PAD)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use group::Curve;
+    use bls12_381::G1Affine;
+
+    use crate::external::util::rand_scalar;
+    use crate::serialization::SerializableG1Affine;
+
+    #[test]
+    fn test_serialization() {
+        let a = (G1Affine::generator() * rand_scalar()).to_affine();
+        let serialized: Vec<u8> = postcard::to_stdvec(&SerializableG1Affine::from(a)).unwrap();
+        let b: SerializableG1Affine = postcard::from_bytes(&serialized).unwrap();
+
+        assert_eq!(a, b.v)
     }
 }

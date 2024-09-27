@@ -1,33 +1,33 @@
-FROM rust:latest as wasm
+# syntax=docker/dockerfile:1
 
-WORKDIR /prepams/
+FROM node:20 AS build
 
-RUN cargo install wasm-pack
+COPY --from=ghcr.io/vs-uulm/prepams/shared /prepams/shared/pkg /prepams/shared/pkg
 
-RUN apt-get update && apt-get install -y jq
-
-COPY shared shared
-
-RUN cd shared && ./build.sh
-
-FROM node:alpine as build
-WORKDIR /app/frontend/
-COPY --from=wasm /prepams/shared/pkg /app/shared/pkg
-COPY frontend/package*.json /app/frontend/
+WORKDIR /prepams/frontend/
+COPY frontend/package*.json ./
 RUN npm install
+
+WORKDIR /prepams/evaluation/
+COPY evaluation/package*.json ./
+RUN npm install
+
+WORKDIR /prepams/evaluation/
+COPY evaluation .
+RUN npm run build
+
+WORKDIR /prepams/frontend/
 COPY frontend .
 RUN NODE_OPTIONS=--openssl-legacy-provider npm run build
 
-WORKDIR /app/evaluation/
-COPY evaluation .
-COPY --from=wasm /prepams/shared/pkg /app/shared/pkg
-RUN npm install
-RUN npm run build
-
-FROM nginx:alpine
-
-COPY --from=build /app/frontend/dist /usr/share/nginx/html
-COPY --from=build /app/evaluation/dist /usr/share/nginx/html/eval
+FROM nginx:1.26-alpine
+COPY --from=build /prepams/frontend/dist /usr/share/nginx/html
+COPY --from=build /prepams/evaluation/dist /usr/share/nginx/html/eval
 COPY frontend/default-nginx.conf /etc/nginx/conf.d/default.conf 
+
 EXPOSE 80
 
+LABEL org.opencontainers.image.ref.name="ghcr.io/vs-uulm/prepams/frontend"
+LABEL org.opencontainers.image.source="https://github.com/vs-uulm/prepams"
+LABEL org.opencontainers.image.authors="Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)"
+LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"

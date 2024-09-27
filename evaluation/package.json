@@ -1,6 +1,13 @@
 {
   "name": "prepams-evaluation",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "repository": "github:vs-uulm/prepams",
+  "url": "https://github.com/vs-uulm/prepams/issues",
+  "license": "AGPL-3.0-or-later",
+  "author": "Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)",
+  "contributors": [
+    "Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)"
+  ],
   "description": "Evaluation script for PrePaMS",
   "scripts": {
     "start": "node index.js evaluate",
@@ -9,7 +16,6 @@
     "analyze": "nodemon --exec Rscript analysis.R --watch analysis.R",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "license": "MIT",
   "private": true,
   "dependencies": {
     "@faker-js/faker": "^8.3.1",
@@ -17,11 +23,13 @@
     "csv-writer": "^1.6.0",
     "debug": "^4.3.4",
     "express": "^4.18.1",
+    "file-saver": "^2.0.5",
     "html-webpack-plugin": "^5.6.0",
     "jstat": "^1.9.6",
+    "jszip": "^3.10.1",
     "prepams-shared": "file:../shared/pkg",
     "prob.js": "^1.0.6",
-    "puppeteer": "^21.7.0",
+    "puppeteer": "^23.3.0",
     "random-js": "^2.1.0",
     "ua-parser-js": "^1.0.37",
     "webpack": "^5.89.0"

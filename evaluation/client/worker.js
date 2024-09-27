@@ -1,4 +1,4 @@
-import { init, b64encode, b64decode, Issuer, Organizer, Participant, Resource, Participation, ConfirmedParticipation } from 'prepams-shared';
+import { init, b64encode, b64decode, LedgerEntry, Issuer, Organizer, Participant, Resource, Participation, ConfirmedParticipation } from 'prepams-shared';
 
 setTimeout(() => {
   init();
@@ -42,7 +42,11 @@ self.addEventListener('message', async ({ data: [job, args] }) => {
         time[job] = performance.now() - start;
         time[`${job}_size`] = out?.length ?? -1;
 
-        self.postMessage([time, out]);
+        if (ArrayBuffer.isView(out)) {
+          self.postMessage([time, out], [out.buffer]);
+        } else {
+          self.postMessage([time, out]);
+        }
       } else {
         console.log('[worker]', job, args);
       }
@@ -52,6 +56,10 @@ self.addEventListener('message', async ({ data: [job, args] }) => {
 class Evaluation {
   constructor(workload) {
     this.issuer = Issuer.deserialize(b64decode(workload.issuer), []);
+
+    for (const entry of (workload.ledger || [])) {
+      this.issuer = this.issuer.appendEntry(LedgerEntry.deserialize(b64decode(entry)));
+    }
 
     this.organizers = new Map(workload.organizers.map(({ id, seed, credential }) => [
       id,
@@ -64,7 +72,10 @@ class Evaluation {
       resource: Resource.deserialize(b64decode(e.object))
     }]));
 
-    this.participants = new Map();
+    this.participants = new Map([...workload.PARTICIPANTS, ...workload.WARMUP_PARTICIPANTS]
+      .filter(e => e.credential)
+      .map(e => [e.id, { credential: Participant.deserialize(b64decode(e.credential)) }])
+    );
   }
 
   clear() {
@@ -72,6 +83,10 @@ class Evaluation {
   }
 
   async registerRequest({ id, seed, attributes }) {
+    if (this.participants.has(id)) {
+      return;
+    }
+
     const user = new Participant(
       id,
       new Uint32Array(attributes.map(e => Number(e))),
@@ -88,10 +103,18 @@ class Evaluation {
   }
 
   async registerVerify(_, request) {
+    if (!request) {
+      return;
+    }
+
     return this.issuer.issueCredential(request);
   }
 
   async registerComplete({ id }, response) {
+    if (!response) {
+      return [];
+    }
+
     const user = this.participants.get(id);
     user.credential.retrieveCredential(response);
     return [];
@@ -145,14 +168,6 @@ class Evaluation {
     delete user.nullRequest;
 
     user.nulls = nulls;
-    /*
-    console.log('--------------');
-    console.log('payout', value, id);
-    console.log('ledger', b64encode(this.issuer.ledger));
-    console.log('cred', b64encode(user.credential.serialize()));
-    console.log('nulls', b64encode(nulls));
-    console.log('--------------');
-    */
 
     const request = user.credential.requestPayout(
       value,
@@ -166,20 +181,7 @@ class Evaluation {
   }
 
   async payoutVerify([id, value], request) {
-    try {
-      const receipt = this.issuer.checkPayoutRequest(request);
-      return receipt.entry.payout.serialize();
-    } catch (e) {
-      const user = this.participants.get(id);
-      console.log('--------------');
-      console.log('value', value);
-      console.log('cred', b64encode(user.credential.serialize()));
-      console.log('nulls', b64encode(user.nulls));
-      console.log('request', b64encode(request));
-      console.log('issuer', b64encode(this.issuer.serialize()));
-      console.log('ledger', b64encode(this.issuer.ledger));
-      console.log('--------------');
-      throw e;
-    }
+    const receipt = this.issuer.checkPayoutRequest(request);
+    return receipt.entry.payout.serialize();
   }
 };

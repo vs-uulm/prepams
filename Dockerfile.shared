@@ -1,0 +1,16 @@
+FROM rust:1.74 AS wasm
+
+WORKDIR /prepams/
+RUN cargo install wasm-pack@0.12.1
+RUN apt-get update && apt-get install -y jq
+
+COPY shared shared
+RUN cd shared && ./build.sh
+
+FROM scratch
+COPY --from=0 /prepams/shared/pkg /prepams/shared/pkg
+
+LABEL org.opencontainers.image.ref.name="ghcr.io/vs-uulm/prepams/shared"
+LABEL org.opencontainers.image.source="https://github.com/vs-uulm/prepams"
+LABEL org.opencontainers.image.authors="Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)"
+LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"

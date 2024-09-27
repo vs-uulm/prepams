@@ -16,7 +16,7 @@ self.addEventListener('message', ({ data }) => {
           args.resource.duration || '',
           args.resource.reward,
           args.resource.webBased && true || false,
-          args.resource.studyUrl || '',
+          args.resource.studyURL || '',
           args.resource.qualifier,
           args.resource.disqualifier,
           args.resource.constraints 
@@ -24,6 +24,11 @@ self.addEventListener('message', ({ data }) => {
 
         const credential = Participant.deserialize(new Uint8Array(args.credential));
         const participation = credential.participate(resource);
+        const p = Participation.deserialize(new Uint8Array(participation));
+        if (!p.verify()) {
+          throw new Error('prerequisites not met');
+        }
+
         result = participation;
         break;
       }
@@ -72,7 +77,7 @@ self.addEventListener('message', ({ data }) => {
     self.postMessage({
       id: data.id,
       error: true,
-      result: e
+      result: new Error(e.message)
     });
   }
 });

@@ -1,3 +1,7 @@
+import JSZip from 'jszip';
+import UAParser from 'ua-parser-js';
+import { saveAs } from 'file-saver';
+
 window.init = async function(workload, headless = false) {
   window.workload = workload;
   window.headless = headless;
@@ -24,7 +28,11 @@ window.init = async function(workload, headless = false) {
       return (...args) => {
         return new Promise((resolve) => {
           promises.push(resolve);
-          target.postMessage([job, args]);
+          if (ArrayBuffer.isView(args[1])) {
+            target.postMessage([job, args], [args[1].buffer]);
+          } else {
+            target.postMessage([job, args]);
+          }
         });
       };
     }
@@ -96,6 +104,49 @@ setTimeout(async () => {
     btn.style.margin = '1em';
     btn.innerHTML = 'Run All Experiments';
     document.body.appendChild(btn);
+
+    try {
+      const ua = UAParser();
+
+      const deviceType = (ua.device.type === 'mobile' || ua.device.type === 'tablet') ? ua.device.type : 'laptop';
+      const prefix = `${ua.os.name}-${ua.os.version}_${ua.browser.name}-${ua.browser.version}_${deviceType}`.replace(/[^a-zA-Z0-9-_]*/g, '');
+      const zip = new JSZip();
+      window.zip = zip.folder(prefix);
+
+      const download = document.createElement('button');
+      download.style.fontSize = '200%';
+      download.style.margin = '1em';
+      download.innerHTML = 'Download ZIP Archive';
+      document.body.appendChild(download);
+
+      download.addEventListener('click', async () => {
+        download.disabled = true;
+        try {
+          const blob = await zip.generateAsync({ type: 'blob' });
+          saveAs(blob, `${prefix}.zip`);
+        } catch (e) {
+          console.log(e);
+          alert(e.toString());
+        }
+        download.disabled = false;
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
+    const label = document.createElement('label');
+    label.innerText = 'WORKLOAD_SIZE:';
+    label.style.fontSize = '200%';
+    label.style.margin = '1em';
+    label.for = 'workloadSize';
+    document.body.appendChild(label);
+
+    const select = document.createElement('select');
+    select.id = 'workloadSize';
+    select.style.fontSize = '200%';
+    select.style.margin = '1em';
+    select.innerHTML = '<option>PETS25_MINIMAL</option><option>PETS25_REDUCED</option><option>PETS25_FULL</option>';
+    document.body.appendChild(select);
 
     const ul = document.createElement('ul');
     ul.innerHTML = workloads
@@ -175,8 +226,21 @@ setTimeout(async () => {
       container.appendChild(progress);
 
       const res = await fetch(`workloads/${workload}.json`);
-      const w = await res.json();
+      let w = await res.json();
       w.name = workload;
+      if (w.filterWorkload) {
+        try {
+          const filterWorkload = new Function(
+            'workload',
+            'WORKLOAD_SIZE',
+            w.filterWorkload.slice(w.filterWorkload.indexOf('{') + 1, w.filterWorkload.lastIndexOf('}'))
+          );
+
+          w = filterWorkload(w, select.value);
+        } catch (e) {
+          console.log('[warn] exception while filtering workload', e);
+        }
+      }
       const worker = await window.init(w);
 
       progress.max = (window.workload.length || 0);
@@ -192,6 +256,9 @@ setTimeout(async () => {
           const header = Object.keys(times[0]);
           const content = `${header.join(',')}\n${times.map(e => header.map(h => e[h]).join(',')).join('\n')}`;
           pre.innerText += `\n\n${name}.csv\n${content}`;
+          if (window.zip) {
+            window.zip.file(`${workload}/${name}.csv`, content);
+          }
 
           try {
             const res = await fetch(`/post?experiment=${workload}&file=${name}`, {

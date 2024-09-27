@@ -1,0 +1,6 @@
+.git/
+results/
+target/
+shared/target/
+shared/target-wasm/
+**/node_modules/

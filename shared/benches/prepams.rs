@@ -459,6 +459,5 @@ pub fn payout(c: &mut Criterion) {
     }
 }
 
-//criterion_group!(benches, registration, participation, payout);
-criterion_group!(benches, participation);
+criterion_group!(benches, registration, participation, payout);
 criterion_main!(benches);

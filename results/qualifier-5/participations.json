@@ -1,0 +1,802 @@
+[
+  {
+    "participate": 23997.800000190735,
+    "participate_size": 110470,
+    "confirm": 10625.400000095367,
+    "confirm_size": 471,
+    "reward": 23.200000286102295,
+    "reward_size": 796
+  },
+  {
+    "participate": 24069.700000286102,
+    "participate_size": 110470,
+    "confirm": 10634.900000095367,
+    "confirm_size": 471,
+    "reward": 23.40000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24087,
+    "participate_size": 110470,
+    "confirm": 10663.099999904633,
+    "confirm_size": 471,
+    "reward": 23.09999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 23962.900000095367,
+    "participate_size": 110470,
+    "confirm": 10712,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24003.800000190735,
+    "participate_size": 110470,
+    "confirm": 10676.400000095367,
+    "confirm_size": 471,
+    "reward": 23.5,
+    "reward_size": 796
+  },
+  {
+    "participate": 24026.89999961853,
+    "participate_size": 110470,
+    "confirm": 10652.699999809265,
+    "confirm_size": 471,
+    "reward": 22.600000381469727,
+    "reward_size": 796
+  },
+  {
+    "participate": 24145.300000190735,
+    "participate_size": 110470,
+    "confirm": 10602,
+    "confirm_size": 471,
+    "reward": 22.59999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 23988.800000190735,
+    "participate_size": 110470,
+    "confirm": 10651.599999904633,
+    "confirm_size": 471,
+    "reward": 22.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 24029.400000095367,
+    "participate_size": 110470,
+    "confirm": 10747,
+    "confirm_size": 471,
+    "reward": 22.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24214.60000038147,
+    "participate_size": 110470,
+    "confirm": 10818,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24086.400000095367,
+    "participate_size": 110470,
+    "confirm": 10724.299999713898,
+    "confirm_size": 471,
+    "reward": 22.799999713897705,
+    "reward_size": 796
+  },
+  {
+    "participate": 23916.099999904633,
+    "participate_size": 110470,
+    "confirm": 10805.200000286102,
+    "confirm_size": 471,
+    "reward": 23.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 24181.699999809265,
+    "participate_size": 110470,
+    "confirm": 10659.900000095367,
+    "confirm_size": 471,
+    "reward": 22.59999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 24147.199999809265,
+    "participate_size": 110470,
+    "confirm": 10642.200000286102,
+    "confirm_size": 471,
+    "reward": 22.90000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24164,
+    "participate_size": 110470,
+    "confirm": 10694.700000286102,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24070,
+    "participate_size": 110470,
+    "confirm": 10619.699999809265,
+    "confirm_size": 471,
+    "reward": 22.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 23839.5,
+    "participate_size": 110470,
+    "confirm": 10686.599999904633,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24027.699999809265,
+    "participate_size": 110470,
+    "confirm": 10681.200000286102,
+    "confirm_size": 471,
+    "reward": 22.90000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24075.099999904633,
+    "participate_size": 110470,
+    "confirm": 10716.900000095367,
+    "confirm_size": 471,
+    "reward": 22.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24094,
+    "participate_size": 110470,
+    "confirm": 10641.60000038147,
+    "confirm_size": 471,
+    "reward": 22.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 24141.5,
+    "participate_size": 110470,
+    "confirm": 10719.900000095367,
+    "confirm_size": 471,
+    "reward": 26.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24047.400000095367,
+    "participate_size": 110470,
+    "confirm": 10780.799999713898,
+    "confirm_size": 471,
+    "reward": 22.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 23925.599999904633,
+    "participate_size": 110470,
+    "confirm": 10652.5,
+    "confirm_size": 471,
+    "reward": 22.799999713897705,
+    "reward_size": 796
+  },
+  {
+    "participate": 24107.699999809265,
+    "participate_size": 110470,
+    "confirm": 10723.400000095367,
+    "confirm_size": 471,
+    "reward": 22.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 24061.200000286102,
+    "participate_size": 110470,
+    "confirm": 10706.099999904633,
+    "confirm_size": 471,
+    "reward": 24.59999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 24123,
+    "participate_size": 110470,
+    "confirm": 10647.900000095367,
+    "confirm_size": 471,
+    "reward": 22.700000286102295,
+    "reward_size": 796
+  },
+  {
+    "participate": 24002.5,
+    "participate_size": 110470,
+    "confirm": 10662.400000095367,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24131.599999904633,
+    "participate_size": 110470,
+    "confirm": 10662.300000190735,
+    "confirm_size": 471,
+    "reward": 22.700000286102295,
+    "reward_size": 796
+  },
+  {
+    "participate": 24062,
+    "participate_size": 110470,
+    "confirm": 10650.800000190735,
+    "confirm_size": 471,
+    "reward": 58.90000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24118.300000190735,
+    "participate_size": 110470,
+    "confirm": 10715.60000038147,
+    "confirm_size": 471,
+    "reward": 22.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 23972.800000190735,
+    "participate_size": 110470,
+    "confirm": 10713.900000095367,
+    "confirm_size": 471,
+    "reward": 23.40000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24048.400000095367,
+    "participate_size": 110470,
+    "confirm": 10606.299999713898,
+    "confirm_size": 471,
+    "reward": 22.799999713897705,
+    "reward_size": 796
+  },
+  {
+    "participate": 24053.400000095367,
+    "participate_size": 110470,
+    "confirm": 10618.400000095367,
+    "confirm_size": 471,
+    "reward": 22.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24026.400000095367,
+    "participate_size": 110470,
+    "confirm": 10656.89999961853,
+    "confirm_size": 471,
+    "reward": 22.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 24099.300000190735,
+    "participate_size": 110470,
+    "confirm": 10739.099999904633,
+    "confirm_size": 471,
+    "reward": 22.5,
+    "reward_size": 796
+  },
+  {
+    "participate": 24161.900000095367,
+    "participate_size": 110470,
+    "confirm": 10741.10000038147,
+    "confirm_size": 471,
+    "reward": 22.40000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24150.099999904633,
+    "participate_size": 110470,
+    "confirm": 10652,
+    "confirm_size": 471,
+    "reward": 22.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 24073.199999809265,
+    "participate_size": 110470,
+    "confirm": 10656,
+    "confirm_size": 471,
+    "reward": 23.09999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 24030.200000286102,
+    "participate_size": 110470,
+    "confirm": 10724.800000190735,
+    "confirm_size": 471,
+    "reward": 22.90000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24081.400000095367,
+    "participate_size": 110470,
+    "confirm": 10696.699999809265,
+    "confirm_size": 471,
+    "reward": 22.90000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24301.5,
+    "participate_size": 110470,
+    "confirm": 10652.200000286102,
+    "confirm_size": 471,
+    "reward": 23.09999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 24064.800000190735,
+    "participate_size": 110470,
+    "confirm": 10667.699999809265,
+    "confirm_size": 471,
+    "reward": 22.799999713897705,
+    "reward_size": 796
+  },
+  {
+    "participate": 24076.400000095367,
+    "participate_size": 110470,
+    "confirm": 10627.800000190735,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24080.5,
+    "participate_size": 110470,
+    "confirm": 10660.300000190735,
+    "confirm_size": 471,
+    "reward": 22.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 24091.099999904633,
+    "participate_size": 110470,
+    "confirm": 10606.199999809265,
+    "confirm_size": 471,
+    "reward": 22.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 24520.5,
+    "participate_size": 110470,
+    "confirm": 10646.199999809265,
+    "confirm_size": 471,
+    "reward": 23.199999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 24030.200000286102,
+    "participate_size": 110470,
+    "confirm": 10611,
+    "confirm_size": 471,
+    "reward": 22.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 24089.799999713898,
+    "participate_size": 110470,
+    "confirm": 10642.099999904633,
+    "confirm_size": 471,
+    "reward": 22.5,
+    "reward_size": 796
+  },
+  {
+    "participate": 24174.700000286102,
+    "participate_size": 110470,
+    "confirm": 10689.200000286102,
+    "confirm_size": 471,
+    "reward": 22.59999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 24124.300000190735,
+    "participate_size": 110470,
+    "confirm": 10795.800000190735,
+    "confirm_size": 471,
+    "reward": 23.100000381469727,
+    "reward_size": 796
+  },
+  {
+    "participate": 24189.5,
+    "participate_size": 110470,
+    "confirm": 10605.39999961853,
+    "confirm_size": 471,
+    "reward": 23.09999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 24050.900000095367,
+    "participate_size": 110470,
+    "confirm": 10588,
+    "confirm_size": 471,
+    "reward": 22.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24005.900000095367,
+    "participate_size": 110470,
+    "confirm": 10641.099999904633,
+    "confirm_size": 471,
+    "reward": 22.700000286102295,
+    "reward_size": 796
+  },
+  {
+    "participate": 24187,
+    "participate_size": 110470,
+    "confirm": 10716.800000190735,
+    "confirm_size": 471,
+    "reward": 22.90000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24039.800000190735,
+    "participate_size": 110470,
+    "confirm": 10759.300000190735,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 23993.39999961853,
+    "participate_size": 110470,
+    "confirm": 10653.599999904633,
+    "confirm_size": 471,
+    "reward": 22.59999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 24364.299999713898,
+    "participate_size": 110470,
+    "confirm": 10652.5,
+    "confirm_size": 471,
+    "reward": 23.200000286102295,
+    "reward_size": 796
+  },
+  {
+    "participate": 23979,
+    "participate_size": 110470,
+    "confirm": 10690.60000038147,
+    "confirm_size": 471,
+    "reward": 23.300000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24184.200000286102,
+    "participate_size": 110470,
+    "confirm": 10661.900000095367,
+    "confirm_size": 471,
+    "reward": 22.700000286102295,
+    "reward_size": 796
+  },
+  {
+    "participate": 24193.599999904633,
+    "participate_size": 110470,
+    "confirm": 10649.799999713898,
+    "confirm_size": 471,
+    "reward": 23.09999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 24123.599999904633,
+    "participate_size": 110470,
+    "confirm": 10674.599999904633,
+    "confirm_size": 471,
+    "reward": 22.5,
+    "reward_size": 796
+  },
+  {
+    "participate": 24097.800000190735,
+    "participate_size": 110470,
+    "confirm": 10631.200000286102,
+    "confirm_size": 471,
+    "reward": 22.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24129.199999809265,
+    "participate_size": 110470,
+    "confirm": 10722,
+    "confirm_size": 471,
+    "reward": 22.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24020.699999809265,
+    "participate_size": 110470,
+    "confirm": 10673.5,
+    "confirm_size": 471,
+    "reward": 22.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 24016.5,
+    "participate_size": 110470,
+    "confirm": 10762.099999904633,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24068.799999713898,
+    "participate_size": 110470,
+    "confirm": 10655,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24033.200000286102,
+    "participate_size": 110470,
+    "confirm": 10630,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24128.10000038147,
+    "participate_size": 110470,
+    "confirm": 10629.599999904633,
+    "confirm_size": 471,
+    "reward": 22.699999809265137,
+    "reward_size": 796
+  },
+  {
+    "participate": 24038.5,
+    "participate_size": 110470,
+    "confirm": 10726.199999809265,
+    "confirm_size": 471,
+    "reward": 22.799999713897705,
+    "reward_size": 796
+  },
+  {
+    "participate": 24047.699999809265,
+    "participate_size": 110470,
+    "confirm": 10695.900000095367,
+    "confirm_size": 471,
+    "reward": 23.40000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24065.799999713898,
+    "participate_size": 110470,
+    "confirm": 10639.599999904633,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24123.400000095367,
+    "participate_size": 110470,
+    "confirm": 10585.5,
+    "confirm_size": 471,
+    "reward": 22.899999618530273,
+    "reward_size": 796
+  },
+  {
+    "participate": 24064.099999904633,
+    "participate_size": 110470,
+    "confirm": 10635.300000190735,
+    "confirm_size": 471,
+    "reward": 24.399999618530273,
+    "reward_size": 796
+  },
+  {
+    "participate": 24123.400000095367,
+    "participate_size": 110470,
+    "confirm": 10703.300000190735,
+    "confirm_size": 471,
+    "reward": 23.09999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 24068.099999904633,
+    "participate_size": 110470,
+    "confirm": 10751,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24304.5,
+    "participate_size": 110470,
+    "confirm": 10668.199999809265,
+    "confirm_size": 471,
+    "reward": 22.799999713897705,
+    "reward_size": 796
+  },
+  {
+    "participate": 23998,
+    "participate_size": 110470,
+    "confirm": 10751.700000286102,
+    "confirm_size": 471,
+    "reward": 22.700000286102295,
+    "reward_size": 796
+  },
+  {
+    "participate": 23994.900000095367,
+    "participate_size": 110470,
+    "confirm": 10646.200000286102,
+    "confirm_size": 471,
+    "reward": 22.90000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24125.800000190735,
+    "participate_size": 110470,
+    "confirm": 10675.800000190735,
+    "confirm_size": 471,
+    "reward": 22.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24139.900000095367,
+    "participate_size": 110470,
+    "confirm": 10791.10000038147,
+    "confirm_size": 471,
+    "reward": 22.799999713897705,
+    "reward_size": 796
+  },
+  {
+    "participate": 24007.800000190735,
+    "participate_size": 110470,
+    "confirm": 10715.5,
+    "confirm_size": 471,
+    "reward": 22.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24119.699999809265,
+    "participate_size": 110470,
+    "confirm": 10646.299999713898,
+    "confirm_size": 471,
+    "reward": 22.90000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24082.300000190735,
+    "participate_size": 110470,
+    "confirm": 10601.800000190735,
+    "confirm_size": 471,
+    "reward": 22.90000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24206.599999904633,
+    "participate_size": 110470,
+    "confirm": 10681,
+    "confirm_size": 471,
+    "reward": 23.09999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 24132,
+    "participate_size": 110470,
+    "confirm": 10630.800000190735,
+    "confirm_size": 471,
+    "reward": 23.299999713897705,
+    "reward_size": 796
+  },
+  {
+    "participate": 23969.199999809265,
+    "participate_size": 110470,
+    "confirm": 10668.699999809265,
+    "confirm_size": 471,
+    "reward": 22.700000286102295,
+    "reward_size": 796
+  },
+  {
+    "participate": 24173.300000190735,
+    "participate_size": 110470,
+    "confirm": 10619.900000095367,
+    "confirm_size": 471,
+    "reward": 22.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24087.599999904633,
+    "participate_size": 110470,
+    "confirm": 10678.299999713898,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24135.299999713898,
+    "participate_size": 110470,
+    "confirm": 10590.799999713898,
+    "confirm_size": 471,
+    "reward": 22.799999713897705,
+    "reward_size": 796
+  },
+  {
+    "participate": 24242.699999809265,
+    "participate_size": 110470,
+    "confirm": 10656,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24116,
+    "participate_size": 110470,
+    "confirm": 10715.900000095367,
+    "confirm_size": 471,
+    "reward": 23.09999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 24047.10000038147,
+    "participate_size": 110470,
+    "confirm": 10616.900000095367,
+    "confirm_size": 471,
+    "reward": 23.09999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 24047.5,
+    "participate_size": 110470,
+    "confirm": 10667.599999904633,
+    "confirm_size": 471,
+    "reward": 22.59999990463257,
+    "reward_size": 796
+  },
+  {
+    "participate": 23982.199999809265,
+    "participate_size": 110470,
+    "confirm": 10711.700000286102,
+    "confirm_size": 471,
+    "reward": 22.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24108.599999904633,
+    "participate_size": 110470,
+    "confirm": 10724,
+    "confirm_size": 471,
+    "reward": 22.90000009536743,
+    "reward_size": 796
+  },
+  {
+    "participate": 24168.299999713898,
+    "participate_size": 110470,
+    "confirm": 10672.900000095367,
+    "confirm_size": 471,
+    "reward": 22.800000190734863,
+    "reward_size": 796
+  },
+  {
+    "participate": 24204.199999809265,
+    "participate_size": 110470,
+    "confirm": 10718.700000286102,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24266.89999961853,
+    "participate_size": 110470,
+    "confirm": 10684.299999713898,
+    "confirm_size": 471,
+    "reward": 22.799999713897705,
+    "reward_size": 796
+  },
+  {
+    "participate": 24200.199999809265,
+    "participate_size": 110470,
+    "confirm": 10656.60000038147,
+    "confirm_size": 471,
+    "reward": 23,
+    "reward_size": 796
+  },
+  {
+    "participate": 24094.10000038147,
+    "participate_size": 110470,
+    "confirm": 10766.099999904633,
+    "confirm_size": 471,
+    "reward": 26.5,
+    "reward_size": 796
+  }
+]

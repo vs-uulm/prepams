@@ -4,8 +4,7 @@ const { open } = require('sqlite');
 module.exports = {
   async openDatabase() {
     const db = await open({
-      filename: 'prepams.db',
-      // filename: ':memory:',
+      filename: process.env['PREPAMS_DB_PATH'] || './data/prepams.db',
       driver: sqlite3.Database
     });
 

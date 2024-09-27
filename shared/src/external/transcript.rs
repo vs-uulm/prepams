@@ -1,10 +1,13 @@
+// adapted from https://github.com/dalek-cryptography/bulletproofs/blob/main/src/transcript.rs
+// licensed under MIT license
+
 use merlin::Transcript;
 
 use group::Curve;
 use bls12_381::{G1Affine, G2Affine, Gt, G1Projective, Scalar};
 use bls12_381::hash_to_curve::{HashToCurve, ExpandMsgXmd};
 
-use crate::serialization::SerializableGt;
+use crate::serialization::Gt::gt_to_bytes;
 
 pub trait TranscriptProtocol {
     // Append a `u64` with the given `label`.
@@ -50,7 +53,7 @@ impl TranscriptProtocol for Transcript {
     }
 
     fn append_gt(&mut self, label: &'static [u8], point: &Gt) {
-        self.append_message(label, &SerializableGt::to_bytes(point));
+        self.append_message(label, &gt_to_bytes(point));
     }
 
     fn append_byte(&mut self, label: &'static [u8], byte: u8) {

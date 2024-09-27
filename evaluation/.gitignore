@@ -117,3 +117,6 @@ dist
 plot.tex
 plot_*.png
 results/*
+!dist/
+dist/*
+!dist/workloads/

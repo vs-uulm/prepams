@@ -53,6 +53,9 @@ cp "pkg-browser/${PKG_NAME}_bg.js" "pkg/${PKG_NAME}_bg.js"
 cp "pkg-browser/${PKG_NAME}_bg.wasm" "pkg/${PKG_NAME}_bg.wasm"
 cp "pkg-browser/${PKG_NAME}_bg.wasm.d.ts" "pkg/${PKG_NAME}_bg.wasm.d.ts"
 
+# wasm-opt -O3 -o "pkg/${PKG_NAME}.wasm" "pkg-node/${PKG_NAME}_bg.wasm"
+# wasm-opt -O3 -o "pkg/${PKG_NAME}_bg.wasm" "pkg-browser/${PKG_NAME}_bg.wasm"
+
 sed 's/_bg.wasm/.wasm/g' -i "pkg/${PKG_NAME}.js"
 
 # if [ ! -f pkg/package.json ]; then

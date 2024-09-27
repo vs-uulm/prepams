@@ -1,3 +1,6 @@
+// adapted from https://github.com/rustwasm/wasm-bindgen/blob/main/examples/console_log/src/lib.rs
+// licensed under MIT license
+
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

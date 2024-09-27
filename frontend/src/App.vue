@@ -6,31 +6,93 @@
           <v-col cols="12" xl="8" offset-xl="2">
             <v-card>
               <v-toolbar>
-                <div class="d-flex align-center">
-                  <v-img alt="PrePaMS" class="shrink mr-4" contain :src="require('@/assets/logo.svg')" transition="scale-transition" width="40" />
+                <div class="d-flex align-center" @click="about = true" :style="{ cursor: ABOUT ? 'pointer' : null }">
+                  <v-img alt="PrePaMS Logo" class="shrink mr-4" contain :src="require('@/assets/logo.svg')" transition="scale-transition" width="40" />
                 </div>
-                <h3 class="my-3 mr-6 pt-1 font-weight-bold" style="font-variant: small-caps">PrePaMS</h3>
-                <v-btn text to="/">
-                  <v-icon left>mdi-home-outline</v-icon>
-                  Home
-                </v-btn>
-                <v-btn text to="/studies" :disabled="role !== 'organizer'">
-                  <v-icon left>mdi-file-question-outline</v-icon>
-                  My Studies
-                </v-btn>
+                <h3 class="my-3 mr-6 pt-1 font-weight-bold" :style="{ fontVariant: 'small-caps', cursor: ABOUT ? 'pointer' : null }" @click="about = true">PrePaMS</h3>
+                <div class="d-flex d-md-none flex-grow-1 justify-end">
+                  <v-menu offset-y>
+                    <template #activator="{ on, attrs }">
+                      <v-btn icon color="primary" dark v-bind="attrs" v-on="on">
+                        <v-icon>mdi-menu</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-list>
+                      <v-list-item to="/">
+                        <v-list-item-icon>
+                          <v-icon>mdi-home-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Home</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item to="/studies" :disabled="role !== 'organizer'">
+                        <v-list-item-icon>
+                          <v-icon>mdi-file-question-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>My Studies</v-list-item-title>
+                      </v-list-item>
 
-                <v-spacer />
+                      <v-divider />
 
-                <v-btn to="/payouts" color="warning" class="mr-3">
-                  <v-icon left>mdi-bug</v-icon>
-                  Payouts Log
-                </v-btn>
+                      <v-list-item to="/payouts" class="warning--text">
+                        <v-list-item-icon>
+                          <v-icon color="warning">mdi-bug</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Payouts Log</v-list-item-title>
+                      </v-list-item>
 
-                <v-btn @click="clearSessions()">
-                  <v-icon left>mdi-bug</v-icon>
-                  Clear Local Sessions
-                </v-btn>
+                      <v-list-item @click="clearSessions()">
+                        <v-list-item-icon>
+                          <v-icon>mdi-bug</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Clear Local Sessions</v-list-item-title>
+                      </v-list-item>
+
+                      <v-list-item @click="about = true" class="info--text" v-if="ABOUT">
+                        <v-list-item-icon>
+                          <v-icon color="info">mdi-information-variant</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>About PrePaMS</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </div>
+                
+                <div class="d-none d-md-flex flex-grow-1">
+                  <v-btn text to="/">
+                    <v-icon left>mdi-home-outline</v-icon>
+                    Home
+                  </v-btn>
+                  <v-btn text to="/studies" :disabled="role !== 'organizer'">
+                    <v-icon left>mdi-file-question-outline</v-icon>
+                    My Studies
+                  </v-btn>
+
+                  <v-spacer />
+
+                  <v-btn to="/payouts" color="warning" class="mr-3">
+                    <v-icon left>mdi-bug</v-icon>
+                    Payouts Log
+                  </v-btn>
+
+                  <v-btn @click="clearSessions()">
+                    <v-icon left>mdi-bug</v-icon>
+                    Clear Local Sessions
+                  </v-btn>
+
+                  <v-btn @click="about = true" v-if="ABOUT" color="info" class="ml-3">
+                    <v-icon left>mdi-information-variant</v-icon>
+                    About
+                  </v-btn>
+                </div>
               </v-toolbar>
+
+              <v-alert v-model="about" color="info" dismissible v-if="ABOUT">
+                <template #prepend><span class="mr-2 mb-auto" v-html="ABOUT_ICON"></span></template>
+                <div v-html="ABOUT"></div>
+                <template #close="{ toggle }">
+                  <v-btn rounded icon small @click="toggle" class="mb-auto mr-n1 mt-n1"><v-icon>mdi-close-circle</v-icon></v-btn>
+                </template>
+              </v-alert>
 
               <v-card-text>
                 <v-row>
@@ -69,6 +131,18 @@
           </v-card>
       </v-dialog>
     </v-main>
+    <v-footer padless>
+      <v-col class="text-center" cols="12">
+        &copy; {{ new Date().getFullYear() }}
+        <strong class="mr-3 ml-1"><a href="https://www.uni-ulm.de/en/in/vs/" target="_blank">Institute of Distributed Systems, Ulm University</a></strong>
+        |
+        <v-btn text small href="https://github.com/vs-uulm/prepams" target="_blank"><v-icon left>mdi-github</v-icon>GitHub</v-btn>
+        <v-btn text small href="https://github.com/vs-uulm/prepams" target="_blank"><v-icon left>mdi-file-document-outline</v-icon>Publication</v-btn>
+        <template v-if="FOOTER">
+          | <span v-html="FOOTER"></span>
+        </template>
+      </v-col>
+    </v-footer>
   </v-app>
 </template>
 
@@ -78,8 +152,11 @@ import UserAuthentication from '@/components/UserAuthentication';
 
 export default {
   data: () => ({
+    about: localStorage.getItem('about-dismissed') !== 'true',
+    drawer: false,
     dialog: false,
     resolve: null,
+    promise: null,
     reject: null,
     message: null,
     title: null,
@@ -90,7 +167,11 @@ export default {
       warning: 'mdi-alert-outline',
       success: 'mdi-checkbox-marked-circle',
       error: 'mdi-alert-octagon-outline'
-    }
+    },
+
+    ABOUT: process.env['VUE_APP_ABOUT'] || '',
+    ABOUT_ICON: process.env['VUE_APP_ABOUT_ICON'] || '',
+    FOOTER: process.env['VUE_APP_FOOTER'] || '',
   }),
 
   components: {
@@ -111,7 +192,14 @@ export default {
   },
 
   methods: {
-    open(title, message, options) {
+    async open(title, message, options) {
+      if (this.promise) {
+        this.dialog = false;
+        await new Promise(resolve => setTimeout(resolve, 10));
+        this.dialog = true;
+        await this.promise;
+      }
+
       this.options = Object.assign({
         type: null,
         color: 'primary',
@@ -134,20 +222,26 @@ export default {
       this.message = message;
       this.dialog = true;
 
-      return new Promise((resolve, reject) => {
+      this.promise = new Promise((resolve, reject) => {
         this.resolve = resolve;
         this.reject = reject;
       });
+
+      return this.promise;
     },
 
     agree() {
       this.resolve(true);
       this.dialog = false;
+      this.promise = null;
+      this.resolve = null;
     },
 
     cancel() {
       this.resolve(false);
       this.dialog = false;
+      this.promise = null;
+      this.resolve = null;
     },
 
     clearSessions() {
@@ -164,6 +258,12 @@ export default {
     role() {
       return this.$store.state.user?.role;
     }
+  },
+
+  watch: {
+    about(v) {
+      localStorage.setItem('about-dismissed', String(!v));
+    }
   }
 }
 </script>
@@ -172,5 +272,4 @@ export default {
 #app {
   background-color: #e5e3dd;
 }
-
 </style>

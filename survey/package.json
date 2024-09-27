@@ -1,0 +1,24 @@
+{
+  "name": "prepams-survey-demo",
+  "version": "1.0.0",
+  "repository": "github:vs-uulm/prepams",
+  "url": "https://github.com/vs-uulm/prepams/issues",
+  "main": "index.js",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "description": "A very simple web-based survey system to showcase PrePaMS' support for online studies.",
+  "author": "Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)",
+  "contributors": [
+    "Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)"
+  ],
+  "scripts": {
+    "start": "node index.js",
+    "serve": "nodemon index.js --watch ../shared/pkg --watch ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.2",
+    "express": "^4.18.2",
+    "prepams-shared": "file:../shared/pkg"
+  }
+}

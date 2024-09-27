@@ -1,15 +1,14 @@
 [package]
 name = "prepams-shared"
 description = "Shared cryptography library for PrePaMS"
-license = "MIT"
-version = "0.2.0"
+authors = ["Echo Meißner <mail@ech0.de>", "Felix Engelmann <fe-research@nlogn.org>"]
+repository = "https://github.com/vs-uulm/prepams"
+license = "AGPL-3.0-or-later"
+version = "1.2.0"
 edition = "2021"
 
 [profile.release]
 opt-level = 3
-# 
-# [profile.test]
-# opt-level = 3
 
 [lib]
 crate-type = ["cdylib","lib"]

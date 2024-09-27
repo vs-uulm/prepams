@@ -8,6 +8,7 @@ use ed25519_zebra::{SigningKey, VerificationKey};
 use rand_chacha::ChaCha20Rng;
 use rand_chacha::rand_core::SeedableRng;
 
+use crate::external::util::as_scalar;
 use crate::serialization::{input, output, convert};
 use crate::pbss::{self, BlindedSignRequest, BlindedSignature, RerandomizedProofResponse};
 use crate::types::*;
@@ -15,6 +16,8 @@ use crate::types::credential::*;
 use crate::credential;
 use crate::proofs::generic::{Transcript, GenericProof};
 use crate::proofs::payout::{MAX_INPUTS, PayoutProof, PayoutProofInput, PayoutProofSecrets};
+
+use super::participant::Participant;
 
 #[wasm_bindgen]
 #[allow(non_snake_case)]
@@ -219,5 +222,48 @@ impl Issuer {
             target: proof.inputs.target.clone(),
             recipient: proof.inputs.recipient.clone()
         })
+    }
+
+    // only used for evaluation purposes to quickly add a preceeding participation to the ledger
+    pub fn bootstrapLedger(&mut self, participant: &Participant, organizerSeed: &[u8], resource: &Resource, id: String) -> Result<LedgerEntry, JsError> {
+        let credential = participant.credential().unwrap();
+
+        let study = resource.id.clone();
+        let tag = credential.derive_tag(&resource.id).unwrap();
+        let mut prng = credential.derive_reward_rng(&study);
+        let s = <bls12_381::Scalar as ff::Field>::random(&mut prng);
+        let d = <bls12_381::Scalar as ff::Field>::random(&mut prng);
+        let reward = as_scalar(resource.reward.into());
+        let reward_request = pbss::Blind(&self.creditVerificationKey, &vec![reward], &vec![s, credential.identity], &d, &mut prng);
+
+        let mut data = id.as_bytes().to_vec();
+        let mut req = to_stdvec(&reward_request)?;
+        data.append(&mut req);
+
+        let seed: [u8; 32] = convert(organizerSeed.try_into())?;
+        let mut rng = ChaCha20Rng::from_seed(seed);
+        let secretKey = SigningKey::new(&mut rng);
+        let sig = secretKey.sign(&data);
+
+        let participation = ConfirmedParticipation {
+            id: id,
+            study: study,
+            tag: tag,
+            value: resource.reward,
+            request: reward_request,
+            signature: sig
+        };
+
+        let mut data = participation.id.as_bytes().to_vec();
+        let mut req = to_stdvec(&participation.request)?;
+        data.append(&mut req);
+
+        let coin = pbss::Sign(&self.creditVerificationKey, &self.creditSigningKey, &participation.request, thread_rng())?;
+        let tx = Transaction {
+            participation: participation,
+            coin
+        };
+
+        self.ledger.appendTransaction(&self.signingKey, tx)
     }
 }

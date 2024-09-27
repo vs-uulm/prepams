@@ -8,7 +8,7 @@ module.exports = {
   buildEvalApplication(dir) {
     return new Promise((resolve, reject) => {
       webpack({
-        entry: './client/index.js',
+        entry: path.join(__dirname, '..', 'client', 'index.js'),
         mode: 'production',
 
         target: 'web',
