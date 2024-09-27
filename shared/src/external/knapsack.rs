@@ -1,4 +1,5 @@
-// adopted from https://github.com/TheAlgorithms/Rust/blob/master/src/dynamic_programming/knapsack.rs
+// adapted from https://github.com/TheAlgorithms/Rust/blob/master/src/dynamic_programming/knapsack.rs
+// licensed under MIT license
 
 /// knapsack_table(w, weights) returns the knapsack table (`n`, `m`) with maximum values, where `n` is number of items
 ///

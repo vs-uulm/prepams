@@ -424,7 +424,7 @@ export default new Vuex.Store({
         const req = await axios.get(`/api/rewards`);
         const participations = req.data.transactions;
 
-        const encoded = await callWorker({
+        let encoded = await callWorker({
           call: 'participate',
           credential: context.state.user.credential.serialize(),
           resource: {
@@ -454,57 +454,66 @@ export default new Vuex.Store({
         request.set(data, 12);
         request.set(iv);
 
+        let participationCode = null;
+        let participationFile = null;
+
         // submit participation to server
         const res = await axios.post(`/api/participations`, request, {
           headers: { 'Content-Type': 'application/octet-stream' },
         });
 
         const url = `${res.data.url}/#${participationKey}`;
-        const participationCode = await QRCode.toDataURL(url);
 
-        const canvas = document.createElement('canvas');
-        canvas.height = 880;
-        canvas.width = 600;
-        
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (!study.webBased) {
+          participationCode = await QRCode.toDataURL(url);
 
-        ctx.font = 'bold 28px Roboto, sans-serif';
-        ctx.fillStyle = 'black';
-        ctx.fillText('PrePaMS Participation Code', 100, 50);
+          const canvas = document.createElement('canvas');
+          canvas.height = 880;
+          canvas.width = 600;
+          
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        const img = new Image();
-        img.src = logo;
-        await new Promise(resolve => img.addEventListener('load', resolve));
-        ctx.drawImage(img, 2, 0, 90, 90);
+          ctx.font = 'bold 28px Roboto, sans-serif';
+          ctx.fillStyle = 'black';
+          ctx.fillText('PrePaMS Participation Code', 100, 50);
 
-        const qr = new Image();
-        qr.src = participationCode;
-        await new Promise(resolve => qr.addEventListener('load', resolve));
-        ctx.drawImage(qr, 25, 115, 550, 550);
+          const img = new Image();
+          img.src = logo;
+          await new Promise(resolve => img.addEventListener('load', resolve));
+          ctx.drawImage(img, 2, 0, 90, 90);
 
-        ctx.font = '23px Roboto, sans-serif';
-        [
-          'This is your participation code for the study:',
-          `> ${study.name}`,
-          `organized by ${study.owner}.`,
-          '',
-          'The embedded information allows the study organizer',
-          'to validate your participation and transfer participation',
-          'rewards to you, but does not contain any personal',
-          'identifiable information about you.',
-        ].forEach((e, i) => ctx.fillText(e, 18, 710 + 22 * i))
+          const qr = new Image();
+          qr.src = participationCode;
+          await new Promise(resolve => qr.addEventListener('load', resolve));
+          ctx.drawImage(qr, 25, 115, 550, 550);
 
-        ctx.font = '16px Roboto, sans-serif';
-        ctx.fillStyle = 'grey';
-        ctx.fillText(study.id, 100, 78);
+          ctx.font = '23px Roboto, sans-serif';
+          [
+            'This is your participation code for the study:',
+            `> ${study.name}`,
+            `organized by ${study.owner}.`,
+            '',
+            'The embedded information allows the study organizer',
+            'to validate your participation and transfer participation',
+            'rewards to you, but does not contain any personal',
+            'identifiable information about you.',
+          ].forEach((e, i) => ctx.fillText(e, 18, 710 + 22 * i))
 
-        ctx.textAlign = 'right';
-        ctx.fillText(new Date().toJSON().slice(0, 10), 578, 58);
-        ctx.fillText(new Date().toJSON().slice(11, 19), 578, 78);
+          ctx.font = '16px Roboto, sans-serif';
+          ctx.fillStyle = 'grey';
+          ctx.fillText(study.id, 100, 78);
 
-        const participationFile = canvas.toDataURL();
+          ctx.textAlign = 'right';
+          ctx.fillText(new Date().toJSON().slice(0, 10), 578, 58);
+          ctx.fillText(new Date().toJSON().slice(11, 19), 578, 78);
+
+          participationFile = canvas.toDataURL();
+        } else {
+          encoded = await base64Encode(encoded);
+          participationCode = res.data.id;
+        }
 
         return {
           participationCode,
@@ -555,7 +564,7 @@ export default new Vuex.Store({
         study.duration || '',
         study.reward,
         study.webBased,
-        study.studyUrl || '',
+        study.studyURL || '',
         study.qualifier,
         study.disqualifier,
         study.constraints 

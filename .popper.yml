@@ -1,13 +1,28 @@
 steps:
 
 - id: measure
-  uses: "./evaluation/"
-  dir: "/usr/src/evaluation"
+  uses: "docker://ghcr.io/vs-uulm/prepams/evaluation"
+  dir: "/workspace"
+  env:
+    OUTPUT_DIR: "/workspace/evaluation/results"
   runs: ["sh"]
-  args: ["-c", "node index.js"]
+  args: ["-c", "node /usr/src/evaluation/index.js evaluate"]
+  secrets: ["WORKLOAD_SIZE", "EXPERIMENT"]
+
+- id: additional_devices
+  uses: "docker://ghcr.io/vs-uulm/prepams/backend"
+  dir: "/workspace"
+  options:
+    ports: { 52716:52716 }
+    tty: True
+  env:
+    OUTPUT_DIR: "/workspace/evaluation/results"
+    SKIP_STEP: "REMOVE THIS LINE TO ENABLE THE EVALUATION SERVER"
+  runs: ["sh"]
+  args: ["-c", "cd /prepams/backend; node ../evaluation/serve.js"]
 
 - id: analyze
-  uses: "docker://rocker/verse:4.2.2"
-  dir: "/workspace/evaluation"
+  uses: "docker://ghcr.io/vs-uulm/prepams/verse"
+  dir: "/workspace"
   runs: ["sh"]
-  args: ["-c", "R --vanilla < /workspace/evaluation/analysis.R; latexmk -pdflua -pvc- results/plot.tex; latexmk -pdflua -pvc- results/scaling.tex"]
+  args: ["-c", "cd /workspace/evaluation; R --vanilla < /workspace/evaluation/analysis.R && cd results && lualatex scaling.tex && lualatex performance.tex"]

@@ -1,3 +1,6 @@
+// adapted from https://github.com/dalek-cryptography/bulletproofs/blob/main/src/inner_product_proof.rs
+// licensed under MIT license
+
 #![allow(non_snake_case)]
 #![allow(dead_code)]
 
@@ -253,9 +256,8 @@ impl InnerProductProof {
         // 3. Compute u_i^2 and (1/u_i)^2
 
         for i in 0..lg_n {
-            // XXX missing square fn upstream
-            challenges[i] = &challenges[i] * &challenges[i];
-            challenges_inv[i] = &challenges_inv[i] * &challenges_inv[i];
+            challenges[i] = challenges[i].square();
+            challenges_inv[i] = challenges_inv[i].square();
         }
         let challenges_sq = challenges;
         let challenges_inv_sq = challenges_inv;

@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 dist
+shared/pkg
 frontend/dist
 
 # local env files
@@ -85,3 +86,4 @@ pnpm-debug.log*
 *.db
 *.credential
 */.env
+target/

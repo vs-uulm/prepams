@@ -1,5 +1,6 @@
 module.exports = {
   devServer: {
+    port: 8008,
     allowedHosts: 'all',
     client: {
       webSocketURL: 'auto://0.0.0.0:0/ws'
@@ -12,8 +13,12 @@ module.exports = {
   },
 
   configureWebpack: {
+    target: 'web',
     experiments: {
       asyncWebAssembly: true
+    },
+    performance: {
+      hints: false
     },
     plugins: [{
       apply(compiler) {
@@ -27,7 +32,6 @@ module.exports = {
   },
 
   transpileDependencies: [
-    // 'vuex-persist',
     'vuetify'
-  ]
+  ],
 }

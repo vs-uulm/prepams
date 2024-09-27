@@ -21,6 +21,22 @@
       <v-card-text v-if="!participationCode">
         <study-info :study="study" />
 
+        <v-overlay :value="waiting" style="cursor: wait;">
+          <v-card width="min(95vw,400px)">
+            <v-card-title class="info--text">
+              <v-icon left color="info">mdi-timer-sand</v-icon>
+              Waiting for completion...
+            </v-card-title>
+            <v-card-text class="text-center">
+              <v-alert outlined type="info" dense class="text-left">
+                Complete the survey using the external study software to continue.
+              </v-alert>
+
+              <v-progress-circular indeterminate :size="100" color="info" />
+            </v-card-text>
+          </v-card>
+        </v-overlay>
+
         <v-card outlined class="mt-4">
           <v-card-text class="pa-4 pb-3">
             <div class="text-overline mb-0 mt-n2">
@@ -174,15 +190,14 @@
       <v-card-actions v-if="!participationCode && $store.state.user && $store.state.user.role === 'participant'">
         <v-spacer />
 
-        <v-btn color="primary" @click="participate" v-if="!$store.state.user.participated[study.id]"
-          :disabled="!$store.state.user || $store.state.user.role !== 'participant' || loading" :loading="loading">
-          <v-icon small left>mdi-clipboard-edit-outline</v-icon>
-          {{ $store.state.user ? 'Participate' : 'Log In to Participate' }}
-        </v-btn>
-        <v-chip color="green" text-color="white" class="float-right" v-else>
+        <v-chip color="green" text-color="white" class="float-right" v-if="$store.state.user.participated && $store.state.user.participated.has(study.id)">
           <v-icon color="white" left>mdi-check-bold</v-icon>
           participated
         </v-chip>
+        <v-btn color="primary" @click="participate" v-else :disabled="!$store.state.user || $store.state.user.role !== 'participant' || loading" :loading="loading">
+          <v-icon small left>mdi-clipboard-edit-outline</v-icon>
+          {{ $store.state.user ? 'Participate' : 'Log In to Participate' }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -202,6 +217,7 @@ export default {
   data() {
     return {
       loading: false,
+      waiting: false,
       attributes: null,
 
       qualifier: [],
@@ -211,6 +227,7 @@ export default {
       participationURL: null,
       participationCode: null,
       participationFile: null,
+      participationTimer: null,
       participationCodeSaved: false,
 
       study: {
@@ -232,6 +249,12 @@ export default {
   async mounted() {
     await this.$parent.loaded;
     await this.reload();
+  },
+
+  beforeDestroy() {
+    if (this.participationTimer) {
+      clearInterval(this.participationTimer);
+    }
   },
 
   methods: {
@@ -286,30 +309,67 @@ export default {
           participationFile
         } = await this.$store.dispatch('participate', this.study);
 
-        if (this.webBased) {
-          if (await this.$root.$confirm('Redirecting to Web-based Study...', `
-            You will be redirected to the following URL:
-            ${this.study.studyURL}
+        if (this.study.webBased) {
+          if (await this.$root.$confirm('Redirecting to Web-based Study...', [
+            'You will be redirected to the following URL:',
+            this.study.studyURL,
+            '',
+            'Your participation data will be transfered during this process as well, this does not contain any personal identifiable information.'
+          ].join('\n'), { type: 'info' })) {
+            this.waiting = true;
 
-            Your participation data will be transfered during this process as well, this does not contain any personal identifiable information.
-          `, { type: 'info' })) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = this.study.studyURL;
-
-            const dataField = document.createElement('input');
-            dataField.type = 'hidden';
-            dataField.name = 'data';
-            dataField.value = JSON.stringify(participation);
-
-            form.appendChild(dataField);
-            document.body.appendChild(form);
-            form.submit();
+            let target;
+            window.addEventListener('message', async (e) => {
+              console.log('on:message', e.data)
+              if (e.data === 'ready' && target) {
+                target.postMessage({
+                  type: 'prepams-participation',
+                  participation: {
+                    context: `${this.study.name} (${this.study.reward} credits)`,
+                    href: `${location.origin}/study/${this.study.id}`,
+                    code: participationCode,
+                    data: participation
+                  }
+                }, new URL(this.study.studyURL).origin);
+              } else if (e.data?.type === 'prepams-confirmation') {
+                const buf = await fetch(`data:application/octet-stream;base64,${e.data.confirmation}`);
+                const confirmedParticipation = new Uint8Array(await buf.arrayBuffer());
+                await axios.post(`/api/rewards`, confirmedParticipation, {
+                  headers: { 'Content-Type': 'application/octet-stream' },
+                });
+                this.waiting = false;
+                await this.$store.dispatch('refreshBalance');
+                if (this.$store.state.user.participated?.has?.(this.study.id)) {
+                  target.postMessage({ type: 'prepams-completed' }, new URL(this.study.studyURL).origin);
+                }
+                this.reload();
+                if (this.$route.fullPath !== `/study/${this.study.id}`) {
+                  this.$router.push(`/study/${this.study.id}`);
+                }
+              }
+            });
+            target = window.open(this.study.studyURL);
           }
         } else {
           this.participationCode = participationCode;
           this.participationFile = participationFile;
           this.participationURL = participationURL;
+          this.participationTimer = setInterval(async () => {
+            // check participation
+            await this.$store.dispatch('refreshBalance');
+            if (this.$store.state.user.participated?.has?.(this.study.id)) {
+              clearInterval(this.participationTimer);
+              this.participationCodeSaved = true;
+              this.participationTimer = null;
+              this.participationCode = null;
+              this.participationFile = null;
+              this.participationURL = null;
+              this.reload();
+              if (this.$route.fullPath !== `/study/${this.study.id}`) {
+                this.$router.push(`/study/${this.study.id}`);
+              }
+            }
+          }, 5000);
         }
       } catch (e) {
         this.$root.$handleError(e);

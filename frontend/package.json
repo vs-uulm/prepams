@@ -1,8 +1,14 @@
 {
-  "name": "prepams",
-  "version": "0.1.0",
+  "name": "prepams-frontend",
+  "version": "0.2.0",
+  "repository": "github:vs-uulm/prepams",
+  "url": "https://github.com/vs-uulm/prepams/issues",
   "private": true,
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
+  "author": "Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)",
+  "contributors": [
+    "Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -11,7 +17,7 @@
   "dependencies": {
     "@fontsource/roboto": "^4.5.0",
     "@mdi/font": "^5.9.55",
-    "axios": "^0.21.2",
+    "axios": "^1.7.7",
     "babel-loader": "^9.1.2",
     "core-js": "^3.8.3",
     "fast-json-stable-stringify": "^2.1.0",
@@ -69,7 +75,6 @@
   },
   "browserslist": [
     "> 1%",
-    "last 2 versions",
-    "not dead"
+    "last 2 versions"
   ]
 }

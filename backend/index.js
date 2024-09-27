@@ -55,6 +55,8 @@ if (process.argv[2] === '--init') {
         return issuer.appendEntry(LedgerEntry.fromPayout(issuer.head, entry.coin, entry.chain));
       }
     }, Issuer.deserialize(Buffer.from(process.env['ISSUER_SECRET'], 'base64url'), []));
+    console.log(`issuer credential loaded, ${entries.length} transaction${entries.length !== 1 ? 's' : ''} applied`);
+    console.log(`ISSUER_PK="${Buffer.from(issuer.publicKey).toString('base64url')}"`);
   } catch (e) {
     console.error('Error: Issuer credential missing, initialize issuer using --init argument');
     console.error(e);
@@ -143,7 +145,7 @@ if (process.argv[2] === '--init') {
         reward,
         qualifier,
         disqualifier,
-        attributes,
+        constraints,
         webBased,
         studyURL,
         signature
@@ -157,7 +159,7 @@ if (process.argv[2] === '--init') {
         :reward,
         :qualifier,
         :disqualifier,
-        :attributes,
+        :constraints,
         :webBased,
         :studyURL,
         :signature
@@ -172,7 +174,7 @@ if (process.argv[2] === '--init') {
       ':reward': resource.reward,
       ':qualifier': JSON.stringify(resource.qualifier),
       ':disqualifier': JSON.stringify(resource.disqualifier),
-      ':attributes': JSON.stringify(resource.attributes),
+      ':constraints': JSON.stringify(resource.constraints),
       ':webBased': resource.webBased,
       ':studyURL': resource.studyUrl,
       ':signature': signedResource.signature
@@ -309,6 +311,43 @@ if (process.argv[2] === '--init') {
     }
 
     res.json(payouts);
+  }));
+
+  app.get('/api/demo/resetdemo', (req, res) => res.set('content-type', 'text/html').end(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+      <form method="POST">
+        <input type="submit" value="Reset Demo (DELETES ALL DATA)" />
+      </form>
+    </body>
+    </html>
+  `));
+
+  app.post('/api/demo/resetdemo', asyncWrapper(async (req, res) => {
+    await db.run('DROP TABLE users');
+    await db.run('DROP TABLE issued');
+    await db.run('DROP TABLE studies');
+    await db.run('DROP TABLE ledger');
+    await db.run('DROP TABLE participations');
+    await db.run('DROP TABLE migrations');
+    await db.close();
+
+    res.set('refresh', '10;url=/').set('content-type', 'text/html').end(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
+      <body>
+        <progress />
+      </body>
+      </html>
+    `);
+    process.exit(1);
   }));
 
   app.listen(process.env['PORT'], () => console.log(`listening at http://localhost:${process.env['PORT']}`));

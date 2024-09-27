@@ -1,0 +1,21 @@
+# syntax=docker/dockerfile:1
+
+FROM node:20
+
+COPY --from=ghcr.io/vs-uulm/prepams/shared /prepams/shared/pkg /prepams/shared/pkg
+
+WORKDIR /prepams/survey/
+COPY survey/package*.json /prepams/survey/
+RUN npm install
+
+WORKDIR /prepams/survey/
+COPY survey .
+EXPOSE 8080
+
+WORKDIR /prepams/survey/
+CMD ["node", "index.js"]
+
+LABEL org.opencontainers.image.ref.name="ghcr.io/vs-uulm/prepams/survey"
+LABEL org.opencontainers.image.source="https://github.com/vs-uulm/prepams"
+LABEL org.opencontainers.image.authors="Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)"
+LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"

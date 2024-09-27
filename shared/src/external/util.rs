@@ -1,3 +1,6 @@
+// adapted and extended from https://github.com/dalek-cryptography/bulletproofs/blob/main/src/util.rs
+// licensed under MIT license
+
 #![allow(non_snake_case)]
 #![allow(dead_code)]
 
@@ -7,7 +10,7 @@ use alloc::vec;
 use alloc::vec::Vec;
 
 use byteorder::{LittleEndian, ByteOrder};
-use bls12_381::{G1Affine, G1Projective, Scalar};
+use bls12_381::{G1Affine, Scalar};
 use group::Curve;
 
 use super::inner_product_proof::inner_product;
@@ -15,30 +18,8 @@ use super::inner_product_proof::inner_product;
 /// Represents a degree-1 vector polynomial \\(\mathbf{a} + \mathbf{b} \cdot x\\).
 pub struct VecPoly1(pub Vec<Scalar>, pub Vec<Scalar>);
 
-/// Represents a degree-3 vector polynomial
-/// \\(\mathbf{a} + \mathbf{b} \cdot x + \mathbf{c} \cdot x^2 + \mathbf{d} \cdot x^3 \\).
-#[cfg(feature = "yoloproofs")]
-pub struct VecPoly3(
-    pub Vec<Scalar>,
-    pub Vec<Scalar>,
-    pub Vec<Scalar>,
-    pub Vec<Scalar>,
-);
-
 /// Represents a degree-2 scalar polynomial \\(a + b \cdot x + c \cdot x^2\\)
 pub struct Poly2(pub Scalar, pub Scalar, pub Scalar);
-
-/// Represents a degree-6 scalar polynomial, without the zeroth degree
-/// \\(a \cdot x + b \cdot x^2 + c \cdot x^3 + d \cdot x^4 + e \cdot x^5 + f \cdot x^6\\)
-#[cfg(feature = "yoloproofs")]
-pub struct Poly6 {
-    pub t1: Scalar,
-    pub t2: Scalar,
-    pub t3: Scalar,
-    pub t4: Scalar,
-    pub t5: Scalar,
-    pub t6: Scalar,
-}
 
 /// Provides an iterator over the powers of a `Scalar`.
 ///
@@ -100,42 +81,10 @@ pub fn mul_vec(a: &[Scalar], b: &[Scalar]) -> Vec<Scalar> {
     subadd_vec(a,b,Operation::Mul)
 }
 
-pub fn exp_vec(a: &[Scalar], b: &[G1Affine]) -> Vec<G1Affine> {
-    if a.len() != b.len() {
-        // throw some error
-        panic!("lengths of vectors don't match for vector addition");
-    }
-    let mut out = vec![G1Projective::identity(); b.len()];
-    for i in 0..a.len() {
-        out[i] =  &b[i] * &a[i]
-    }
-
-    let mut normalized = vec![G1Affine::identity(); b.len()];
-    G1Projective::batch_normalize(&out, &mut normalized);
-
-    normalized
-}
-
 pub fn smul_vec(x: &Scalar, a: &[Scalar]) -> Vec<Scalar> {
     let mut out = vec![Scalar::zero(); a.len()];
     for i in 0..a.len() {
         out[i] = x * &a[i];
-    }
-    out
-}
-
-pub fn inv_vec(a: &[Scalar]) -> Vec<Scalar> {
-    let mut out = vec![Scalar::zero(); a.len()];
-    for i in 0..a.len() {
-        out[i] = a[i].invert().unwrap();
-    }
-    out
-}
-
-pub fn kron_vec(a: &[Scalar], b: &[Scalar]) -> Vec<Scalar> {
-    let mut out = Vec::<Scalar>::new();
-    for ina in a {
-        out.extend(smul_vec(ina, b))
     }
     out
 }
@@ -171,79 +120,10 @@ impl VecPoly1 {
     }
 }
 
-#[cfg(feature = "yoloproofs")]
-impl VecPoly3 {
-    pub fn zero(n: usize) -> Self {
-        VecPoly3(
-            vec![Scalar::zero(); n],
-            vec![Scalar::zero(); n],
-            vec![Scalar::zero(); n],
-            vec![Scalar::zero(); n],
-        )
-    }
-
-    /// Compute an inner product of `lhs`, `rhs` which have the property that:
-    /// - `lhs.0` is zero;
-    /// - `rhs.2` is zero;
-    /// This is the case in the constraint system proof.
-    pub fn special_inner_product(lhs: &Self, rhs: &Self) -> Poly6 {
-        // TODO: make checks that l_poly.0 and r_poly.2 are zero.
-
-        let t1 = inner_product(&lhs.1, &rhs.0);
-        let t2 = inner_product(&lhs.1, &rhs.1) + inner_product(&lhs.2, &rhs.0);
-        let t3 = inner_product(&lhs.2, &rhs.1) + inner_product(&lhs.3, &rhs.0);
-        let t4 = inner_product(&lhs.1, &rhs.3) + inner_product(&lhs.3, &rhs.1);
-        let t5 = inner_product(&lhs.2, &rhs.3);
-        let t6 = inner_product(&lhs.3, &rhs.3);
-
-        Poly6 {
-            t1,
-            t2,
-            t3,
-            t4,
-            t5,
-            t6,
-        }
-    }
-
-    pub fn eval(&self, x: Scalar) -> Vec<Scalar> {
-        let n = self.0.len();
-        let mut out = vec![Scalar::zero(); n];
-        for i in 0..n {
-            out[i] = self.0[i] + x * (self.1[i] + x * (self.2[i] + x * self.3[i]));
-        }
-        out
-    }
-}
-
 impl Poly2 {
     pub fn eval(&self, x: Scalar) -> Scalar {
         &self.0 + &x * (&self.1 + &x * &self.2)
     }
-}
-
-#[cfg(feature = "yoloproofs")]
-impl Poly6 {
-    pub fn eval(&self, x: Scalar) -> Scalar {
-        &x * (&self.t1 + &x * (&self.t2 + &x * (&self.t3 + &x * (&self.t4 + &x * (&self.t5 + &x * &self.t6)))))
-    }
-}
-
-/// Raises `x` to the power `n` using binary exponentiation,
-/// with (1 to 2)*lg(n) scalar multiplications.
-/// TODO: a consttime version of this would be awfully similar to a Montgomery ladder.
-pub fn scalar_exp_vartime(x: &Scalar, mut n: u64) -> Scalar {
-    let mut result = Scalar::one();
-    let mut aux = x.clone(); // x, x^2, x^4, x^8, ...
-    while n > 0 {
-        let bit = n & 1;
-        if bit == 1 {
-            result = result * &aux;
-        }
-        n = n >> 1;
-        aux = &aux * &aux; // FIXME: one unnecessary mult at the last step here!
-    }
-    result
 }
 
 /// Takes the sum of all the powers of `x`, up to `n`
@@ -273,23 +153,19 @@ fn sum_of_powers_slow(x: &Scalar, n: usize) -> Scalar {
     exp_iter(x.clone()).take(n).sum()
 }
 
-/// Given `data` with `len >= 32`, return the first 32 bytes.
-pub fn read32(data: &[u8]) -> [u8; 32] {
-    let mut buf32 = [0u8; 32];
-    buf32[..].copy_from_slice(&data[..32]);
-    buf32
-}
-
+// returns a uniformly random scalar value
 pub fn rand_scalar() -> Scalar {
     <bls12_381::Scalar as ff::Field>::random(rand::thread_rng())
 }
 
+// asserts pairwise equality of labeled tuple of points
 pub fn assert_point(points: &[(&str, G1Affine, G1Affine)]) {
     for (id, p, g) in points {
         assert!(g.eq(&p), "point {} did not match {:?}", id, p.to_compressed());
     }
 }
 
+// asserts correctness of a precomputed generator based on a hash to curve operation
 pub fn assert_generators(prefix: &str, g1: std::collections::HashMap<&str, G1Affine>) {
     use bls12_381::hash_to_curve::{HashToCurve, ExpandMsgXmd};
     for (k, g) in &g1 {
@@ -300,11 +176,13 @@ pub fn assert_generators(prefix: &str, g1: std::collections::HashMap<&str, G1Aff
     }
 }
 
+// helper function to cast a scalar to an u32 integer with potential loss of precision
 pub fn as_u32(s: &Scalar) -> u32 {
     let b = s.to_bytes();
     LittleEndian::read_u32(&b[..8])
 }
 
+// helper function to cast an u32 integer to a scalar
 pub fn as_scalar(u: u32) -> Scalar {
     Scalar::from(u as u64)
 }
@@ -321,15 +199,6 @@ mod tests {
         assert_eq!(exp_2[1], Scalar::from(2u64));
         assert_eq!(exp_2[2], Scalar::from(4u64));
         assert_eq!(exp_2[3], Scalar::from(8u64));
-    }
-
-    #[test]
-    fn invert() {
-        let vec = vec![Scalar::from(123u64), Scalar::from(654u64)];
-        let inv = inv_vec(&vec);
-
-        assert_eq!(inv[0], Scalar::from(123u64).invert().unwrap());
-        assert_eq!(inv[1], Scalar::from(654u64).invert().unwrap());
     }
 
     #[test]
@@ -372,15 +241,6 @@ mod tests {
             Scalar::from(5u64),
         ];
         assert_eq!(Scalar::from(40u64), inner_product(&a, &b));
-    }
-
-    /// Raises `x` to the power `n`.
-    fn scalar_exp_vartime_slow(x: &Scalar, n: u64) -> Scalar {
-        let mut result = Scalar::one();
-        for _ in 0..n {
-            result = result * x;
-        }
-        result
     }
 
     #[test]

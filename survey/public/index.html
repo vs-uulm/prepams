@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personality Traits Survey - PrePaMS Demo</title>
+    <link rel="stylesheet" href="defaultV2.min.css" />
+  </head>
+  <body>
+    <div id="surveyElement" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; min-height: 100%; height:100%"></div>
+
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="survey.jquery.min.js"></script>
+    <script type="text/javascript" src="defaultV2.min.js"></script>
+    <script type="text/javascript">
+      const json = {
+       "title": "Personality Traits Example Survey",
+       "description": "PrePaMS Demo BFI-10¹ Survey Example",
+       "completedHtml": "<div style=\"max-width:688px;text-align:center;margin: 16px auto;\">\n\n<div style=\"padding:0 24px;\">\n<h4>Thank you for participating in this demo survey.</h4>\n<br>\n<p>Your reward is currently being issued. You will be redirected back to PrePaMS soon.</p>\n</div>\n\n</div>\n",
+       "pages": [{
+        "questions": [{
+            "type": "text",
+            "inputType": "number",
+            "name": "age",
+            "title": "How old are you?",
+            "isRequired": true,
+            "validators": [{
+                "type": "numeric",
+                "minValue": 1,
+                "maxValue": 100
+            }]
+        }, {
+            "type": "matrix",
+            "name": "BFI-10",
+            "isRequired": true,
+            "isAllRowRequired": true,
+            "title": "How well do the following statements describe your personality?",
+            "description": "I see myself as someone who …",
+            "columns": [{
+                "value": 1,
+                "text": "strongly disagree"
+            }, {
+                "value": 2,
+                "text": "disagree"
+            }, {
+                "value": 3,
+                "text": "neither agree nor disagree"
+            }, {
+                "value": 4,
+                "text": "agree"
+            }, {
+                "value": 5,
+                "text": "strongly agree"
+            }],
+            "rows": [{
+                "value": "item01",
+                "text": "is reserved"
+            }, {
+                "value": "item02",
+                "text": "is generally trusting"
+            }, {
+                "value": "item03",
+                "text": "tends to be lazy"
+            }, {
+                "value": "item04",
+                "text": "is relaxed, handles stress well"
+            }, {
+                "value": "item05",
+                "text": "has few artistic interests"
+            }, {
+                "value": "item06",
+                "text": "is outgoing, sociable"
+            }, {
+                "value": "item07",
+                "text": "tends to find fault with others"
+            }, {
+                "value": "item08",
+                "text": "does a thorough job"
+            }, {
+                "value": "item09",
+                "text": "gets nervous easily"
+            }, {
+                "value": "item10",
+                "text": "has an active imagination"
+            }]
+        }, {
+          "type": "html",
+          "name": "footnote",
+          "visible": true,
+          "html": "<small>¹⁾ Rammstedt, B., Kemper, C. J., Klein, M. C., Beierlein, C., &amp; Kovaleva, A. (2014). Big Five Inventory (BFI-10).<br>&emsp;<a href=\"https://www.gesis.org/fileadmin/kurzskalen/working_papers/BFI10_Workingpaper.pdf\" target=\"_blank\">https://www.gesis.org/fileadmin/kurzskalen/working_papers/BFI10_Workingpaper.pdf</a></small>"
+        }]
+       }],
+       "showPrevButton": false,
+       "showQuestionNumbers": "off",
+       "completeText": "Submit Survey",
+      };
+
+        let code = null;
+      let participation = null;
+      window.addEventListener('message', (message) => {
+        if (message.data?.type === 'prepams-participation') {
+          code = message.data.participation.code;
+          participation = message.data.participation.data;
+
+          const e = document.createElement('div');
+          e.style.position = 'absolute';
+          e.style.top = '.75em';
+          e.style.right = '1em';
+          e.style.zIndex = 99;
+          e.style.border = '1.5px solid rgb(125,154,170)';
+          e.style.borderRadius = '.33em';
+          e.style.backgroundColor = '#d8e1e5';
+          e.style.padding = '.5em 1em';
+          e.style.fontFamily = 'sans-serif';
+          e.style.color = '#44545d';
+          e.id = 'prepams-participation';
+          e.innerHTML = `
+              <b>✅ PrePaMS Participation</b>
+              <div style="margin-top: .25em; padding-left:1.7em; font-weight: bold;"><small><a style="color: #26547C" href="${message.data.participation.href}" target="_blank">${message.data.participation.context}</a></small></div>
+          `;
+
+          document.body.append(e);
+        }
+        if (message.data?.type === 'prepams-completed') {
+            window.opener.focus();
+            window.close();
+        }
+      });
+      if (window.opener) {
+        window.opener.postMessage('ready', '*');
+      }
+
+      const survey = new Survey.Model(json);
+      survey.onComplete.add(async (model, options) => {
+          options.showSaveInProgress();
+          try {
+              const res = await fetch('/api/submit', {
+                  method: 'POST',
+                  headers: { 'content-type': 'application/json' },
+                  body: JSON.stringify({
+                      data: model.data,
+                      code: code,
+                      participation: participation
+                  })
+              });
+
+              const data = await res.json();
+              if (data?.ok && data?.confirmation && participation) {
+                window.opener.postMessage({
+                    type: 'prepams-confirmation',
+                    confirmation: data.confirmation
+                }, '*');
+              }
+          } catch (e) {
+              console.log(e);
+          }
+      });
+      
+      $("#surveyElement").Survey({ model: survey });
+    </script>
+  </body>
+</html>

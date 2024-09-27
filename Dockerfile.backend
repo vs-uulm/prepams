@@ -1,0 +1,30 @@
+# syntax=docker/dockerfile:1
+
+FROM node:20
+
+COPY --from=ghcr.io/vs-uulm/prepams/shared /prepams/shared/pkg /prepams/shared/pkg
+
+WORKDIR /prepams/evaluation/
+COPY evaluation/package*.json /prepams/evaluation/
+RUN npm install
+
+WORKDIR /prepams/backend/
+COPY backend/package*.json /prepams/backend/
+RUN npm install
+
+WORKDIR /prepams/evaluation/
+COPY evaluation/serve.js /prepams/evaluation/
+EXPOSE 52716
+
+WORKDIR /prepams/backend/
+COPY backend .
+EXPOSE 8080
+
+WORKDIR /prepams/backend/
+SHELL ["/bin/bash", "-c"]
+ENTRYPOINT node ../evaluation/serve.js & node index.js
+
+LABEL org.opencontainers.image.ref.name="ghcr.io/vs-uulm/prepams/backend"
+LABEL org.opencontainers.image.source="https://github.com/vs-uulm/prepams"
+LABEL org.opencontainers.image.authors="Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)"
+LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"

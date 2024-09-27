@@ -20,10 +20,14 @@ module.exports = class Experiment {
         .filter(([k, v]) => typeof v !== 'function')
         .map(([k, v]) => [k, JSON.stringify(v)])
     ));
+
     this.digest = hash.digest('base64');
+    this.WORKLOAD = path.normalize(path.join(__dirname, '..', 'dist', 'workloads', `${this.config.NAME}.json`));
 
     this.DIR = path.normalize(path.join(__dirname, '..', 'results', this.config.NAME));
-    this.WORKLOAD = path.normalize(path.join(__dirname, '..', 'dist', 'workloads', `${this.config.NAME}.json`));
+    if (process.env['OUTPUT_DIR']) {
+        this.DIR = path.normalize(path.join(process.env['OUTPUT_DIR'], this.config.NAME));
+    }
 
     const seed = [...new Uint32Array(new Uint8Array(Buffer.from(this.config.SEED, 'hex')).buffer)];
     this.prng = MersenneTwister19937.seedWithArray(seed);
@@ -58,6 +62,7 @@ module.exports = class Experiment {
         workload = await this.generateWorkload();
         workload.digest = this.digest;
         workload.filterRecord = this.config.filterRecord || 'true';
+        workload.filterWorkload = (this.config.filterWorkload).toString();
         await fs.writeFile(this.WORKLOAD, JSON.stringify(workload));
       } catch (e) {
         console.error(e);
@@ -66,5 +71,13 @@ module.exports = class Experiment {
     }
     this.workload = workload;
     return workload;
+  }
+
+  getWorkload() {
+    if (typeof(this.config.filterWorkload) !== 'function') {
+      return this.workload;
+    }
+
+    return this.config.filterWorkload.call(this, this.workload, process.env['WORKLOAD_SIZE']);
   }
 };

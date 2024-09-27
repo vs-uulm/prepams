@@ -1,0 +1,1602 @@
+[
+  {
+    "registerRequest": 46.799999713897705,
+    "registerRequest_size": 466,
+    "registerVerify": 55.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 43.89999961853027,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.30000019073486,
+    "registerRequest_size": 468,
+    "registerVerify": 50.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 40.30000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 46.700000286102295,
+    "registerRequest_size": 459,
+    "registerVerify": 47,
+    "registerVerify_size": 260,
+    "registerComplete": 38.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.5,
+    "registerRequest_size": 469,
+    "registerVerify": 47.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 39.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.59999990463257,
+    "registerRequest_size": 458,
+    "registerVerify": 49.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 39.700000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.59999990463257,
+    "registerRequest_size": 463,
+    "registerVerify": 53.700000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 38,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.799999713897705,
+    "registerRequest_size": 466,
+    "registerVerify": 56.5,
+    "registerVerify_size": 260,
+    "registerComplete": 38.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.90000009536743,
+    "registerRequest_size": 466,
+    "registerVerify": 46.40000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 38.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.39999961853027,
+    "registerRequest_size": 471,
+    "registerVerify": 47.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 38.30000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.799999713897705,
+    "registerRequest_size": 471,
+    "registerVerify": 50.89999961853027,
+    "registerVerify_size": 260,
+    "registerComplete": 39.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.80000019073486,
+    "registerRequest_size": 469,
+    "registerVerify": 46.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 38.700000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.799999713897705,
+    "registerRequest_size": 467,
+    "registerVerify": 46.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 38.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.5,
+    "registerRequest_size": 467,
+    "registerVerify": 45.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 37.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.89999961853027,
+    "registerRequest_size": 463,
+    "registerVerify": 50.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 38.30000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.60000038146973,
+    "registerRequest_size": 459,
+    "registerVerify": 48.19999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 37.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.19999980926514,
+    "registerRequest_size": 473,
+    "registerVerify": 45.799999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 38.19999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 58.09999990463257,
+    "registerRequest_size": 468,
+    "registerVerify": 47.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 39.30000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.89999961853027,
+    "registerRequest_size": 468,
+    "registerVerify": 48.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 37.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.80000019073486,
+    "registerRequest_size": 457,
+    "registerVerify": 47.30000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 38.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.10000038146973,
+    "registerRequest_size": 469,
+    "registerVerify": 47.40000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 38.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42,
+    "registerRequest_size": 464,
+    "registerVerify": 51.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 41.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.90000009536743,
+    "registerRequest_size": 464,
+    "registerVerify": 46.19999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 38.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.69999980926514,
+    "registerRequest_size": 465,
+    "registerVerify": 45.60000038146973,
+    "registerVerify_size": 260,
+    "registerComplete": 41.19999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.80000019073486,
+    "registerRequest_size": 476,
+    "registerVerify": 46.40000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 46.700000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.40000009536743,
+    "registerRequest_size": 463,
+    "registerVerify": 47.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 39.19999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.89999961853027,
+    "registerRequest_size": 464,
+    "registerVerify": 46,
+    "registerVerify_size": 260,
+    "registerComplete": 37.80000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.80000019073486,
+    "registerRequest_size": 467,
+    "registerVerify": 47.30000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 38.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.299999713897705,
+    "registerRequest_size": 459,
+    "registerVerify": 45.799999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 37.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.89999961853027,
+    "registerRequest_size": 465,
+    "registerVerify": 52.5,
+    "registerVerify_size": 260,
+    "registerComplete": 38,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 62.59999990463257,
+    "registerRequest_size": 462,
+    "registerVerify": 47.19999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 38.299999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.60000038146973,
+    "registerRequest_size": 458,
+    "registerVerify": 46.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 38.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.89999961853027,
+    "registerRequest_size": 457,
+    "registerVerify": 45.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 39.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.80000019073486,
+    "registerRequest_size": 465,
+    "registerVerify": 46.799999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 40.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.40000009536743,
+    "registerRequest_size": 466,
+    "registerVerify": 46.200000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 38.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 64.10000038146973,
+    "registerRequest_size": 464,
+    "registerVerify": 47.799999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 38.39999961853027,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.799999713897705,
+    "registerRequest_size": 464,
+    "registerVerify": 46.799999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 39.299999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.299999713897705,
+    "registerRequest_size": 463,
+    "registerVerify": 46,
+    "registerVerify_size": 260,
+    "registerComplete": 39.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43,
+    "registerRequest_size": 462,
+    "registerVerify": 51.19999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 45.80000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.299999713897705,
+    "registerRequest_size": 467,
+    "registerVerify": 62.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 43.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.40000009536743,
+    "registerRequest_size": 462,
+    "registerVerify": 46,
+    "registerVerify_size": 260,
+    "registerComplete": 39.89999961853027,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.30000019073486,
+    "registerRequest_size": 466,
+    "registerVerify": 45.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 41,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.90000009536743,
+    "registerRequest_size": 465,
+    "registerVerify": 49.40000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 38.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.80000019073486,
+    "registerRequest_size": 462,
+    "registerVerify": 46,
+    "registerVerify_size": 260,
+    "registerComplete": 38,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.19999980926514,
+    "registerRequest_size": 459,
+    "registerVerify": 47.30000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 39.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.19999980926514,
+    "registerRequest_size": 465,
+    "registerVerify": 46.5,
+    "registerVerify_size": 260,
+    "registerComplete": 38.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.89999961853027,
+    "registerRequest_size": 458,
+    "registerVerify": 47.299999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 41.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 44.299999713897705,
+    "registerRequest_size": 458,
+    "registerVerify": 45.799999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 37.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 46.69999980926514,
+    "registerRequest_size": 467,
+    "registerVerify": 48.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 38.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.200000286102295,
+    "registerRequest_size": 469,
+    "registerVerify": 46.299999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 37.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.69999980926514,
+    "registerRequest_size": 470,
+    "registerVerify": 49,
+    "registerVerify_size": 260,
+    "registerComplete": 40.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.200000286102295,
+    "registerRequest_size": 464,
+    "registerVerify": 45.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 37.90000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.90000009536743,
+    "registerRequest_size": 464,
+    "registerVerify": 46,
+    "registerVerify_size": 260,
+    "registerComplete": 37.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.200000286102295,
+    "registerRequest_size": 462,
+    "registerVerify": 49.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 38.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 44,
+    "registerRequest_size": 466,
+    "registerVerify": 45.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 40,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 44.799999713897705,
+    "registerRequest_size": 462,
+    "registerVerify": 45.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 41.30000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 47.90000009536743,
+    "registerRequest_size": 465,
+    "registerVerify": 63.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 38.89999961853027,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 64.60000038146973,
+    "registerRequest_size": 469,
+    "registerVerify": 47.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 38.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.700000286102295,
+    "registerRequest_size": 460,
+    "registerVerify": 45.799999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 38.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.90000009536743,
+    "registerRequest_size": 469,
+    "registerVerify": 45.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 40.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.799999713897705,
+    "registerRequest_size": 457,
+    "registerVerify": 46.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 38.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.30000019073486,
+    "registerRequest_size": 465,
+    "registerVerify": 46.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 37.90000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.69999980926514,
+    "registerRequest_size": 466,
+    "registerVerify": 48,
+    "registerVerify_size": 260,
+    "registerComplete": 37.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.30000019073486,
+    "registerRequest_size": 458,
+    "registerVerify": 46.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 38.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.80000019073486,
+    "registerRequest_size": 458,
+    "registerVerify": 46.19999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 39.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.30000019073486,
+    "registerRequest_size": 463,
+    "registerVerify": 47.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 38.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.299999713897705,
+    "registerRequest_size": 457,
+    "registerVerify": 47.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 37.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.90000009536743,
+    "registerRequest_size": 463,
+    "registerVerify": 45.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 39.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.90000009536743,
+    "registerRequest_size": 465,
+    "registerVerify": 46.60000038146973,
+    "registerVerify_size": 260,
+    "registerComplete": 39.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.39999961853027,
+    "registerRequest_size": 458,
+    "registerVerify": 46.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 39.19999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.60000038146973,
+    "registerRequest_size": 466,
+    "registerVerify": 46,
+    "registerVerify_size": 260,
+    "registerComplete": 38.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.30000019073486,
+    "registerRequest_size": 466,
+    "registerVerify": 48.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 40.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.40000009536743,
+    "registerRequest_size": 465,
+    "registerVerify": 49.200000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 38.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.5,
+    "registerRequest_size": 464,
+    "registerVerify": 47.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 57.10000038146973,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.89999961853027,
+    "registerRequest_size": 463,
+    "registerVerify": 46.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 41,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 58.39999961853027,
+    "registerRequest_size": 457,
+    "registerVerify": 47.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 38.19999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 85.30000019073486,
+    "registerRequest_size": 464,
+    "registerVerify": 50.30000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 38.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.60000038146973,
+    "registerRequest_size": 457,
+    "registerVerify": 53.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 41.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 69.7000002861023,
+    "registerRequest_size": 459,
+    "registerVerify": 59.30000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 47.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.59999990463257,
+    "registerRequest_size": 459,
+    "registerVerify": 46.5,
+    "registerVerify_size": 260,
+    "registerComplete": 37.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.40000009536743,
+    "registerRequest_size": 464,
+    "registerVerify": 45.60000038146973,
+    "registerVerify_size": 260,
+    "registerComplete": 37.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.30000019073486,
+    "registerRequest_size": 470,
+    "registerVerify": 45.10000038146973,
+    "registerVerify_size": 260,
+    "registerComplete": 37.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.09999990463257,
+    "registerRequest_size": 463,
+    "registerVerify": 45.40000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 37.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.200000286102295,
+    "registerRequest_size": 462,
+    "registerVerify": 45.60000038146973,
+    "registerVerify_size": 260,
+    "registerComplete": 37.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.5,
+    "registerRequest_size": 458,
+    "registerVerify": 45.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 37.30000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43,
+    "registerRequest_size": 464,
+    "registerVerify": 48.299999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 37.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.09999990463257,
+    "registerRequest_size": 459,
+    "registerVerify": 45.299999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 37.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.799999713897705,
+    "registerRequest_size": 463,
+    "registerVerify": 45.19999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 38.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.60000038146973,
+    "registerRequest_size": 465,
+    "registerVerify": 48.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 38.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.5,
+    "registerRequest_size": 459,
+    "registerVerify": 48.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 37.30000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.19999980926514,
+    "registerRequest_size": 464,
+    "registerVerify": 46.299999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 37.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.799999713897705,
+    "registerRequest_size": 470,
+    "registerVerify": 45.39999961853027,
+    "registerVerify_size": 260,
+    "registerComplete": 39.89999961853027,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.90000009536743,
+    "registerRequest_size": 465,
+    "registerVerify": 46.40000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 38.90000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.200000286102295,
+    "registerRequest_size": 462,
+    "registerVerify": 45.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 37.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.40000009536743,
+    "registerRequest_size": 457,
+    "registerVerify": 45.700000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 37.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41,
+    "registerRequest_size": 466,
+    "registerVerify": 45.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 37.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41,
+    "registerRequest_size": 466,
+    "registerVerify": 46.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 37.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.69999980926514,
+    "registerRequest_size": 468,
+    "registerVerify": 45.200000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 37.60000038146973,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41,
+    "registerRequest_size": 466,
+    "registerVerify": 45.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 37.700000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.80000019073486,
+    "registerRequest_size": 461,
+    "registerVerify": 46.5,
+    "registerVerify_size": 260,
+    "registerComplete": 42.10000038146973,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43,
+    "registerRequest_size": 467,
+    "registerVerify": 50.30000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 37.90000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41,
+    "registerRequest_size": 460,
+    "registerVerify": 45.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 39.30000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.89999961853027,
+    "registerRequest_size": 458,
+    "registerVerify": 45.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 41.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 49.5,
+    "registerRequest_size": 460,
+    "registerVerify": 55.40000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 42.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 44.5,
+    "registerRequest_size": 469,
+    "registerVerify": 48.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 38.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.90000009536743,
+    "registerRequest_size": 458,
+    "registerVerify": 50,
+    "registerVerify_size": 260,
+    "registerComplete": 38.19999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42,
+    "registerRequest_size": 467,
+    "registerVerify": 47.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 40.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 47.5,
+    "registerRequest_size": 465,
+    "registerVerify": 60,
+    "registerVerify_size": 260,
+    "registerComplete": 41.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 45.90000009536743,
+    "registerRequest_size": 473,
+    "registerVerify": 47.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 40.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.69999980926514,
+    "registerRequest_size": 470,
+    "registerVerify": 53.60000038146973,
+    "registerVerify_size": 260,
+    "registerComplete": 47.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.799999713897705,
+    "registerRequest_size": 465,
+    "registerVerify": 47.89999961853027,
+    "registerVerify_size": 260,
+    "registerComplete": 40.299999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.09999990463257,
+    "registerRequest_size": 456,
+    "registerVerify": 47.700000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 38.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 46.200000286102295,
+    "registerRequest_size": 466,
+    "registerVerify": 49.200000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 38.90000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.69999980926514,
+    "registerRequest_size": 459,
+    "registerVerify": 48.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 46.90000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 52,
+    "registerRequest_size": 463,
+    "registerVerify": 54.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 40.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 49.09999990463257,
+    "registerRequest_size": 470,
+    "registerVerify": 49.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 40.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 46.69999980926514,
+    "registerRequest_size": 457,
+    "registerVerify": 55.799999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 38,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.700000286102295,
+    "registerRequest_size": 464,
+    "registerVerify": 47.19999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 41.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 49,
+    "registerRequest_size": 464,
+    "registerVerify": 48.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 40,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.80000019073486,
+    "registerRequest_size": 471,
+    "registerVerify": 48.60000038146973,
+    "registerVerify_size": 260,
+    "registerComplete": 39.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.10000038146973,
+    "registerRequest_size": 466,
+    "registerVerify": 48.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 38.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 44.5,
+    "registerRequest_size": 468,
+    "registerVerify": 57.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 43.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 45.59999990463257,
+    "registerRequest_size": 467,
+    "registerVerify": 52.39999961853027,
+    "registerVerify_size": 260,
+    "registerComplete": 48.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.30000019073486,
+    "registerRequest_size": 467,
+    "registerVerify": 47.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 44.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 49.09999990463257,
+    "registerRequest_size": 464,
+    "registerVerify": 57.19999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 43.60000038146973,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 47.09999990463257,
+    "registerRequest_size": 466,
+    "registerVerify": 51.30000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 40.90000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 47.200000286102295,
+    "registerRequest_size": 458,
+    "registerVerify": 51.799999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 43.89999961853027,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.19999980926514,
+    "registerRequest_size": 474,
+    "registerVerify": 47.5,
+    "registerVerify_size": 260,
+    "registerComplete": 39.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 47.09999990463257,
+    "registerRequest_size": 463,
+    "registerVerify": 55.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 42.10000038146973,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.40000009536743,
+    "registerRequest_size": 461,
+    "registerVerify": 55.40000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 39.80000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 46.89999961853027,
+    "registerRequest_size": 456,
+    "registerVerify": 53.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 41.700000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 48.90000009536743,
+    "registerRequest_size": 467,
+    "registerVerify": 55.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 41,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.59999990463257,
+    "registerRequest_size": 469,
+    "registerVerify": 49,
+    "registerVerify_size": 260,
+    "registerComplete": 39.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41,
+    "registerRequest_size": 468,
+    "registerVerify": 46.19999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 38.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.200000286102295,
+    "registerRequest_size": 460,
+    "registerVerify": 46.799999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 37.89999961853027,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.90000009536743,
+    "registerRequest_size": 459,
+    "registerVerify": 45.30000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 37.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.700000286102295,
+    "registerRequest_size": 458,
+    "registerVerify": 45.5,
+    "registerVerify_size": 260,
+    "registerComplete": 37.30000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.40000009536743,
+    "registerRequest_size": 460,
+    "registerVerify": 45.200000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 37.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.90000009536743,
+    "registerRequest_size": 466,
+    "registerVerify": 45.5,
+    "registerVerify_size": 260,
+    "registerComplete": 37.30000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.40000009536743,
+    "registerRequest_size": 462,
+    "registerVerify": 45.5,
+    "registerVerify_size": 260,
+    "registerComplete": 37,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.90000009536743,
+    "registerRequest_size": 459,
+    "registerVerify": 46.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 37.89999961853027,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.60000038146973,
+    "registerRequest_size": 466,
+    "registerVerify": 45.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 37.60000038146973,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.799999713897705,
+    "registerRequest_size": 470,
+    "registerVerify": 47.299999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 37.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.5,
+    "registerRequest_size": 461,
+    "registerVerify": 45.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 40.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.59999990463257,
+    "registerRequest_size": 464,
+    "registerVerify": 45.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 37.30000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.40000009536743,
+    "registerRequest_size": 458,
+    "registerVerify": 45.30000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 37.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.5,
+    "registerRequest_size": 465,
+    "registerVerify": 47.30000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 37.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.89999961853027,
+    "registerRequest_size": 464,
+    "registerVerify": 45.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 37.80000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.80000019073486,
+    "registerRequest_size": 466,
+    "registerVerify": 46.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 37.299999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.59999990463257,
+    "registerRequest_size": 463,
+    "registerVerify": 54.19999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 61.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 73.59999990463257,
+    "registerRequest_size": 458,
+    "registerVerify": 76.39999961853027,
+    "registerVerify_size": 260,
+    "registerComplete": 49.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 45.30000019073486,
+    "registerRequest_size": 466,
+    "registerVerify": 84.7000002861023,
+    "registerVerify_size": 260,
+    "registerComplete": 40.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.30000019073486,
+    "registerRequest_size": 458,
+    "registerVerify": 48.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 39.90000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 45.69999980926514,
+    "registerRequest_size": 464,
+    "registerVerify": 49.89999961853027,
+    "registerVerify_size": 260,
+    "registerComplete": 41.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.5,
+    "registerRequest_size": 463,
+    "registerVerify": 45.700000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 38.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.59999990463257,
+    "registerRequest_size": 462,
+    "registerVerify": 46.40000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 38.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 45.299999713897705,
+    "registerRequest_size": 458,
+    "registerVerify": 45.60000038146973,
+    "registerVerify_size": 260,
+    "registerComplete": 37.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.19999980926514,
+    "registerRequest_size": 463,
+    "registerVerify": 45.10000038146973,
+    "registerVerify_size": 260,
+    "registerComplete": 37.299999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.700000286102295,
+    "registerRequest_size": 462,
+    "registerVerify": 45.200000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 40.80000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 51.5,
+    "registerRequest_size": 465,
+    "registerVerify": 50.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 41.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 44.69999980926514,
+    "registerRequest_size": 462,
+    "registerVerify": 45.40000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 38,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.30000019073486,
+    "registerRequest_size": 462,
+    "registerVerify": 48.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 40,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.60000038146973,
+    "registerRequest_size": 460,
+    "registerVerify": 49.5,
+    "registerVerify_size": 260,
+    "registerComplete": 39.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 45.19999980926514,
+    "registerRequest_size": 472,
+    "registerVerify": 47.60000038146973,
+    "registerVerify_size": 260,
+    "registerComplete": 39.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 44,
+    "registerRequest_size": 463,
+    "registerVerify": 49.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 38.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.39999961853027,
+    "registerRequest_size": 464,
+    "registerVerify": 46.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 38.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.5,
+    "registerRequest_size": 463,
+    "registerVerify": 45.799999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 40.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 49.40000009536743,
+    "registerRequest_size": 466,
+    "registerVerify": 47.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 40.90000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.700000286102295,
+    "registerRequest_size": 459,
+    "registerVerify": 50.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 39.19999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.80000019073486,
+    "registerRequest_size": 457,
+    "registerVerify": 46.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 38.200000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.90000009536743,
+    "registerRequest_size": 465,
+    "registerVerify": 49.30000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 38.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.69999980926514,
+    "registerRequest_size": 459,
+    "registerVerify": 46.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 38,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 45,
+    "registerRequest_size": 467,
+    "registerVerify": 58.19999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 43.700000286102295,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 49.09999990463257,
+    "registerRequest_size": 458,
+    "registerVerify": 68,
+    "registerVerify_size": 260,
+    "registerComplete": 42.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 55.299999713897705,
+    "registerRequest_size": 464,
+    "registerVerify": 49.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 41.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 44.09999990463257,
+    "registerRequest_size": 457,
+    "registerVerify": 48.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 38.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 46.59999990463257,
+    "registerRequest_size": 467,
+    "registerVerify": 50.200000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 38.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.30000019073486,
+    "registerRequest_size": 457,
+    "registerVerify": 46.5,
+    "registerVerify_size": 260,
+    "registerComplete": 37.90000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 46.69999980926514,
+    "registerRequest_size": 467,
+    "registerVerify": 54,
+    "registerVerify_size": 260,
+    "registerComplete": 48.39999961853027,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 52.40000009536743,
+    "registerRequest_size": 470,
+    "registerVerify": 58.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 42.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 62.69999980926514,
+    "registerRequest_size": 457,
+    "registerVerify": 79.60000038146973,
+    "registerVerify_size": 260,
+    "registerComplete": 39.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 44.19999980926514,
+    "registerRequest_size": 458,
+    "registerVerify": 49.59999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 41.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.200000286102295,
+    "registerRequest_size": 465,
+    "registerVerify": 49.40000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 40,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 44.09999990463257,
+    "registerRequest_size": 463,
+    "registerVerify": 46.80000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 43.299999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 42.40000009536743,
+    "registerRequest_size": 465,
+    "registerVerify": 48.200000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 37.19999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.5,
+    "registerRequest_size": 467,
+    "registerVerify": 48.799999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 37.30000019073486,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.69999980926514,
+    "registerRequest_size": 467,
+    "registerVerify": 46.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 37.59999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 40.700000286102295,
+    "registerRequest_size": 457,
+    "registerVerify": 46.5,
+    "registerVerify_size": 260,
+    "registerComplete": 37.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 46.200000286102295,
+    "registerRequest_size": 463,
+    "registerVerify": 47.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 40.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 44.59999990463257,
+    "registerRequest_size": 458,
+    "registerVerify": 51.40000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 40.90000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 44.5,
+    "registerRequest_size": 466,
+    "registerVerify": 79,
+    "registerVerify_size": 260,
+    "registerComplete": 45,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 51.5,
+    "registerRequest_size": 469,
+    "registerVerify": 52.700000286102295,
+    "registerVerify_size": 260,
+    "registerComplete": 42.09999990463257,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 45.90000009536743,
+    "registerRequest_size": 466,
+    "registerVerify": 49.69999980926514,
+    "registerVerify_size": 260,
+    "registerComplete": 40.799999713897705,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.799999713897705,
+    "registerRequest_size": 459,
+    "registerVerify": 49.299999713897705,
+    "registerVerify_size": 260,
+    "registerComplete": 38.39999961853027,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 45.89999961853027,
+    "registerRequest_size": 468,
+    "registerVerify": 49.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 39.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 58.299999713897705,
+    "registerRequest_size": 470,
+    "registerVerify": 48.5,
+    "registerVerify_size": 260,
+    "registerComplete": 40.69999980926514,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 45,
+    "registerRequest_size": 456,
+    "registerVerify": 48.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 42.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 50.09999990463257,
+    "registerRequest_size": 461,
+    "registerVerify": 52.90000009536743,
+    "registerVerify_size": 260,
+    "registerComplete": 42.39999961853027,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 51.39999961853027,
+    "registerRequest_size": 467,
+    "registerVerify": 48.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 40.40000009536743,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 41.5,
+    "registerRequest_size": 466,
+    "registerVerify": 49.30000019073486,
+    "registerVerify_size": 260,
+    "registerComplete": 40.5,
+    "registerComplete_size": 0
+  },
+  {
+    "registerRequest": 43.59999990463257,
+    "registerRequest_size": 466,
+    "registerVerify": 50.09999990463257,
+    "registerVerify_size": 260,
+    "registerComplete": 41.299999713897705,
+    "registerComplete_size": 0
+  }
+]

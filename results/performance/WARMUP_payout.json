@@ -1,0 +1,202 @@
+[
+  {
+    "paddingRequest": 100,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 250.2000002861023,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3326.9000000953674,
+    "payoutRequest_size": 16138,
+    "payoutVerify": 1103.8000001907349,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 91.90000009536743,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 251.7000002861023,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3380,
+    "payoutRequest_size": 16133,
+    "payoutVerify": 1111.9000000953674,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 104.90000009536743,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 241,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3301.9000000953674,
+    "payoutRequest_size": 16136,
+    "payoutVerify": 1073.7999997138977,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 87,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 242.40000009536743,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3178.7999997138977,
+    "payoutRequest_size": 16130,
+    "payoutVerify": 1074.4000000953674,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 87.19999980926514,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 241,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3254.699999809265,
+    "payoutRequest_size": 16132,
+    "payoutVerify": 1157.2999997138977,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 99.90000009536743,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 246.69999980926514,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3286.800000190735,
+    "payoutRequest_size": 16130,
+    "payoutVerify": 1068,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 87.09999990463257,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 242.80000019073486,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3320.7999997138977,
+    "payoutRequest_size": 16132,
+    "payoutVerify": 1135.5,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 101.40000009536743,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 259.90000009536743,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3273.7999997138977,
+    "payoutRequest_size": 16131,
+    "payoutVerify": 1127,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 87,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 239.60000038146973,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3255.300000190735,
+    "payoutRequest_size": 16133,
+    "payoutVerify": 1099.3000001907349,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 110,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 255.09999990463257,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3211.7000002861023,
+    "payoutRequest_size": 16134,
+    "payoutVerify": 1112.0999999046326,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 91.7999997138977,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 239.40000009536743,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3271.699999809265,
+    "payoutRequest_size": 16129,
+    "payoutVerify": 1122.9000000953674,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 90.2999997138977,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 240.09999990463257,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3178.800000190735,
+    "payoutRequest_size": 16130,
+    "payoutVerify": 1084.0999999046326,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 88.7999997138977,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 243.5,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3253.4000000953674,
+    "payoutRequest_size": 16138,
+    "payoutVerify": 1126.5,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 91,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 249.19999980926514,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3208.2999997138977,
+    "payoutRequest_size": 16126,
+    "payoutVerify": 1359.2999997138977,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 133.7000002861023,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 248.90000009536743,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3166.5,
+    "payoutRequest_size": 16132,
+    "payoutVerify": 1075,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 90,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 288.69999980926514,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3327.800000190735,
+    "payoutRequest_size": 16137,
+    "payoutVerify": 1079.5999999046326,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 88.5,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 243.59999990463257,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3258.5,
+    "payoutRequest_size": 16126,
+    "payoutVerify": 1133,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 90.69999980926514,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 241.09999990463257,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3329.5999999046326,
+    "payoutRequest_size": 16135,
+    "payoutVerify": 1156.0999999046326,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 89.69999980926514,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 240,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3278.5,
+    "payoutRequest_size": 16129,
+    "payoutVerify": 1096.5,
+    "payoutVerify_size": 474
+  },
+  {
+    "paddingRequest": 90,
+    "paddingRequest_size": 2631,
+    "paddingResponse": 247.90000009536743,
+    "paddingResponse_size": 2601,
+    "payoutRequest": 3340.5999999046326,
+    "payoutRequest_size": 16130,
+    "payoutVerify": 1138.0999999046326,
+    "payoutVerify_size": 474
+  }
+]

@@ -1,4 +1,4 @@
-const { init, IssuerPublicKey, Issuer, Organizer, Resource } = require('prepams-shared');
+const { init, Issuer, Organizer, Resource } = require('prepams-shared');
 const { faker } = require('@faker-js/faker');
 const { createHash } = require('crypto');
 const { sample } = require('random-js');
@@ -8,25 +8,17 @@ init();
 
 const STUDIES = 200;
 
-const PARTICIPANTS = 1000;
-const PARTICIPATIONS = 1000;
-const PAYOUTS = 100;
-
-const WARMUP_PARTICIPANTS = 200;
-const WARMUP_PARTICIPATIONS = 200;
-const WARMUP_PAYOUTS = 20;
-/*
-const PARTICIPANTS = 1;
-const PARTICIPATIONS = 1;
-const PAYOUTS = 1;
-
-const WARMUP_PARTICIPANTS = 1;
-const WARMUP_PARTICIPATIONS = 1;
-const WARMUP_PAYOUTS = 1;
-*/
+// workload used in PETS'25 evaluation
+let WARMUP_PARTICIPANTS = 200;
+let WARMUP_PARTICIPATIONS = 200;
+let WARMUP_PAYOUTS = 20;
+let PARTICIPANTS = 1000;
+let PARTICIPATIONS = 1000;
+let PAYOUTS = 100;
 
 module.exports = new Experiment({
   NAME: 'performance',
+  EXPERIMENT: 'performance',
   SEED: 'e8b2018ce02e735c266aa28e8254d05c17c9461b0114aefb01359fc3818a0376',
   ISSUER_SECRET: '',
 
@@ -207,7 +199,7 @@ module.exports = new Experiment({
     const studyMap = Object.fromEntries(studies.map(e => [e.id, e]));
 
     const workload = {
-      issuer: Buffer.from(issuer.serialize()).toString('base64'),
+      issuer: Buffer.from(issuer.serialize()).toString('base64url'),
       organizers: Object.values(organizers),
       studies: studies,
       length: 0
@@ -319,6 +311,35 @@ module.exports = new Experiment({
       bar.increment();
     }
     bar.stop();
+
+    return workload;
+  },
+
+  filterWorkload(workload, WORKLOAD_SIZE) {
+    if (WORKLOAD_SIZE === 'PETS25_MINIMAL') {
+      // minimal workload for fast functionality testing
+      workload['WARMUP_PAYOUTS'] = [];
+      workload['PAYOUTS'] = workload['PAYOUTS'].slice(0, 1);
+    } else if (WORKLOAD_SIZE === 'PETS25_REDUCED') {
+      // smaller workload for less time-consuming evaluation
+      workload['WARMUP_PAYOUTS'] = workload['WARMUP_PAYOUTS'].slice(0, 5);
+      workload['PAYOUTS'] = workload['PAYOUTS'].slice(0, 10);
+    } else {
+      return workload;
+    }
+
+    workload['WARMUP_PARTICIPANTS'] = workload['WARMUP_PARTICIPANTS'].filter(e => workload['WARMUP_PAYOUTS'].some(p => p[0] === e.id));
+    workload['WARMUP_PARTICIPATIONS'] = workload['WARMUP_PARTICIPATIONS'].filter(e => workload['WARMUP_PAYOUTS'].some(p => p[0] === e[0]));
+
+    workload['PARTICIPANTS'] = workload['PARTICIPANTS'].filter(e => workload['PAYOUTS'].some(p => p[0] === e.id));
+    workload['PARTICIPATIONS'] = workload['PARTICIPATIONS'].filter(e => workload['PAYOUTS'].some(p => p[0] === e[0]));
+
+    workload.length = workload['WARMUP_PAYOUTS'].length
+      + workload['WARMUP_PARTICIPANTS'].length
+      + workload['WARMUP_PARTICIPATIONS'].length
+      + workload['PAYOUTS'].length
+      + workload['PARTICIPANTS'].length
+      + workload['PARTICIPATIONS'].length;
 
     return workload;
   }

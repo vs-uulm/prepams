@@ -71,7 +71,7 @@
                   </small>
                 </v-subheader>
 
-                <v-list-item v-for="([e, t, params], i) in study.attributes" :key="i" class="info lighten-4">
+                <v-list-item v-for="([e, t, params], i) in study.constraints" :key="i" class="info lighten-4">
                   <v-list-item-icon>
                     <v-icon>mdi-chart-box-plus-outline</v-icon>
                   </v-list-item-icon>
@@ -182,7 +182,7 @@ export default {
         duration: '',
         reward: 0,
         qualifier: [],
-        attributes: [],
+        constraints: [],
         disqualifier: [],
         webBased: false,
         studyURL: '',

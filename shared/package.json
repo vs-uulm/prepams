@@ -1,13 +1,19 @@
 {
-  "name": "shared",
-  "version": "1.0.0",
-  "description": "",
+  "name": "prepams-shared",
+  "description": "A rust-based WebAssembly module implementing the PrePaMS protocol.",
+  "repository": "github:vs-uulm/prepams",
+  "url": "https://github.com/vs-uulm/prepams/issues",
+  "version": "1.2.0",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "author": "Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)",
+  "contributors": [
+    "Echo Meißner <mail@ech0.de> (https://uni-ulm.de/in/vs/meissner)"
+  ],
   "main": "index.js",
   "scripts": {
     "serve": "nodemon --exec 'bash ./build.sh --debug' -e 'rs'",
     "build": "bash ./build.sh",
     "benchmark": "cargo-criterion --message-format=json --plotting-backend=disabled -j 6 | tee microbenchmarks.json"
-  },
-  "author": "",
-  "license": "MIT"
+  }
 }

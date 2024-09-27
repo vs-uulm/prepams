@@ -95,6 +95,18 @@ const demoIdentities = [{
     qualifier: ['CqDYCcS9vnZSKGDNIkEql1bfOBluvUvchrdgQ6Ijv0c'],
     disqualifier: [],
     constraints: []
+  }, {
+    id: 'jzL5j7iQXZjn29s1iygahCd_fHI_gBSJWH7oFiH3Q1s',
+    name: 'Personality Traits Example Survey',
+    abstract: 'A web-based survey demo.',
+    description: '-',
+    duration: '5 minutes',
+    reward: 10,
+    webBased: true,
+    studyUrl: `https://${process.env['SURVEY_HOST']}`,
+    qualifier: [],
+    disqualifier: [],
+    constraints: []
   }]
 }, {
   id: 'organizer2@example.org',

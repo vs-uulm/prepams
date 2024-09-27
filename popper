@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+
+# Little helper script to run popper CLI.
+#
+# Check out the popper documentation for installation instructions:
+# https://popper.readthedocs.io/en/latest/sections/getting_started.html
+
+docker run --rm -ti \
+  --volume /tmp:/tmp \
+  --volume /var/run/docker.sock:/var/run/docker.sock \
+  --volume "$PWD":"$PWD" \
+  --workdir "$PWD" \
+  --env "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+  --env "WORKLOAD_SIZE=$WORKLOAD_SIZE" \
+  --env "EXPERIMENT=$EXPERIMENT" \
+  getpopper/popper:v2020.09.1 "$@"

@@ -1,13 +1,9 @@
-packages <- c("tikzDevice", "cowplot", "tidyverse", "ggrastr", "jsonlite")
-new_packages <- packages[!(packages %in% installed.packages()[, "Package"])]
-if (length(new_packages)) install.packages(new_packages)
-
 library(tikzDevice)
 library(tidyverse)
 library(cowplot)
 library(ggrastr)
-library(dplyr)
 library(ggplot2)
+library(dplyr)
 
 base_size <- 7
 plot_width <- 3.3366142
@@ -52,3 +48,5 @@ theme_custom <- function() {
       )
     )
 }
+
+options(tikzDocumentDeclaration = "\\documentclass[tikz, border=4pt]{standalone}")
