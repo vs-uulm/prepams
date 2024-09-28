@@ -14,7 +14,6 @@ steps:
   dir: "/workspace"
   options:
     ports: { 52716:52716 }
-    tty: True
   env:
     OUTPUT_DIR: "/workspace/evaluation/results"
     SKIP_STEP: "REMOVE THIS LINE TO ENABLE THE EVALUATION SERVER"
