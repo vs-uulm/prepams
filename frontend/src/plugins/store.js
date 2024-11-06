@@ -383,7 +383,7 @@ export default new Vuex.Store({
       ctx.drawImage(qr, 32, 125, 708, 708);
 
       [
-        'This QR code is your recovery key.  If you loose access',
+        'This QR code is your recovery key.  If you lose access',
         'to your device,  clear your browser data,  or forget  your',
         'password,  you need this code to regain access to your',
         'PrePaMS account.',

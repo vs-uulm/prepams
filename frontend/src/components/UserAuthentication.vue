@@ -202,9 +202,9 @@
               <v-col cols="12" md="5" class="pt-6">
                 <v-alert type="info" dense>
                   This QR code is your recovery key.
-                  If you loose access to this device, clear your browser data, or forget your password, you need this
+                  If you lose access to this device, clear your browser data, or forget your password, you need this
                   code to get access to your account.
-                  In case you loose this code and your device/browser data, your account can no longer be
+                  In case you lose this code and your device/browser data, your account can no longer be
                   accessed.<br><br>
                   Treat this code the same way as you would a password, because anyone can get access to your account
                   and your participations with this code!
