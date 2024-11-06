@@ -3,7 +3,7 @@
     <v-card tile class="my-3" v-for="(study, i) in studies" :key="i">
       <v-list-item three-line>
         <v-list-item-content>
-          <v-list-item-title>
+          <v-list-item-title style="white-space: normal">
             {{ study.name }}
           </v-list-item-title>
           <v-list-item-subtitle>{{ study.abstract }}</v-list-item-subtitle>

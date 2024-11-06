@@ -40,6 +40,16 @@
         <v-card outlined class="mt-4">
           <v-card-text class="pa-4 pb-3">
             <div class="text-overline mb-0 mt-n2">
+              Study Name
+            </div>
+
+            <div>{{ study.name }}</div>
+          </v-card-text>
+        </v-card>
+
+        <v-card outlined class="mt-4">
+          <v-card-text class="pa-4 pb-3">
+            <div class="text-overline mb-0 mt-n2">
               Abstract
             </div>
 

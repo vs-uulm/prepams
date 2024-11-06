@@ -467,8 +467,36 @@ export default new Vuex.Store({
         if (!study.webBased) {
           participationCode = await QRCode.toDataURL(url);
 
+          const wrappedName = study.name.split(' ').reduce((s, e) => {
+            if (s[s.length - 1].length + e.length > 42) {
+              if (e.length + 3 > 42) {
+                // break anywhere
+                let offset = 0;
+
+                if (s[s.length - 1].length < 30) {
+                  offset = 36 - s[s.length - 1].length;
+                  s[s.length - 1] = `${s[s.length - 1]} ${e.slice(0, offset)}`;
+                }
+
+                while (offset < e.length) {
+                  const slice = e.slice(offset, offset + 34);
+                  offset += slice.length;
+                  if (!slice.length) {
+                    break;
+                  }
+                  s.push(` > ${slice}`);
+                }
+              } else {
+                s.push(` > ${e}`);
+              }
+            } else {
+              s[s.length - 1] = `${s[s.length - 1]} ${e}`;
+            }
+            return s;
+          }, [' >']);
+
           const canvas = document.createElement('canvas');
-          canvas.height = 880;
+          canvas.height = 870 + 22 * wrappedName.length;
           canvas.width = 600;
           
           const ctx = canvas.getContext('2d');
@@ -492,7 +520,7 @@ export default new Vuex.Store({
           ctx.font = '23px Roboto, sans-serif';
           [
             'This is your participation code for the study:',
-            `> ${study.name}`,
+            ...wrappedName,
             `organized by ${study.owner}.`,
             '',
             'The embedded information allows the study organizer',
