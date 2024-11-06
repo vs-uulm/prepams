@@ -20,9 +20,9 @@ WORKDIR /prepams/backend/
 COPY backend .
 EXPOSE 8080
 
-WORKDIR /prepams/backend/
 SHELL ["/bin/bash", "-c"]
 ENTRYPOINT node ../evaluation/serve.js & node index.js
+COPY --from=ghcr.io/vs-uulm/prepams/evaluation /usr/src/evaluation/dist /prepams/evaluation/dist
 
 LABEL org.opencontainers.image.ref.name="ghcr.io/vs-uulm/prepams/backend"
 LABEL org.opencontainers.image.source="https://github.com/vs-uulm/prepams"

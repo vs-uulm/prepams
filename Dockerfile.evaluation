@@ -51,6 +51,8 @@ RUN npm install
 COPY evaluation/ ./
 COPY --from=ghcr.io/vs-uulm/prepams/shared /prepams/shared/pkg /usr/src/shared/pkg
 
+RUN node index.js
+
 CMD [ "node", "index.js" ]
 
 LABEL org.opencontainers.image.ref.name="ghcr.io/vs-uulm/prepams/evaluation"

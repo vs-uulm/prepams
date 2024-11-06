@@ -12,21 +12,21 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static('dist'));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 app.post('/post', express.text(), async (req, res) => {
-  const ua = parser(req.headers['user-agent']);
-  const deviceType = (ua.device.type === 'mobile' || ua.device.type === 'tablet') ? ua.device.type : 'laptop';
-
-  const prefix = `${ua.os.name}-${ua.os.version}_${ua.browser.name}-${ua.browser.version}`.replace(/[^a-zA-Z0-9-_]*/g, '');
-  const experiment = req.query.experiment.replace(/[^a-zA-Z0-9-_]*/g, '');
-  const file = `${req.query.file.replace(/[^a-zA-Z0-9-_]*/g, '')}.csv`;
-
-  if (!experiment || !file) {
-      return res.status(400).end('Bad Request');
-  }
-
   try {
+    const ua = parser(req.headers['user-agent']);
+    const deviceType = (ua.device.type === 'mobile' || ua.device.type === 'tablet') ? ua.device.type : 'laptop';
+
+    const prefix = `${ua.os.name}-${ua.os.version}_${ua.browser.name}-${ua.browser.version}`.replace(/[^a-zA-Z0-9-_]*/g, '');
+    const experiment = req.query.experiment.replace(/[^a-zA-Z0-9-_]*/g, '');
+    const file = `${req.query.file.replace(/[^a-zA-Z0-9-_]*/g, '')}.csv`;
+
+    if (!experiment || !file) {
+        return res.status(400).end('Bad Request');
+    }
+
     let dir = path.join(__dirname, 'results', 'browser', `${prefix}_${deviceType}`, experiment);
     if (process.env['OUTPUT_DIR']) {
         dir = path.join(process.env['OUTPUT_DIR'], 'browser', `${prefix}_${deviceType}`, experiment);
