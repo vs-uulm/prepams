@@ -59,6 +59,8 @@ for (path in list.dirs(path = "results", full.names = TRUE, recursive = TRUE)) {
 
 ## generate main plot
 create_plot <- function(data, title, y_scale, y_suffix) {
+  tmp <- data %>% dplyr::group_by(type) %>% summarise(n = n()) %>% ungroup() %>% summarise(min = min(n), max = max(n))
+  title <- ifelse(tmp$min == tmp$max, paste(title, " {\\small$(n=", tmp$min, ")$}", sep = ""), title)
   ggplot2::ggplot(data, ggplot2::aes(x = .data$type, y = .data$time)) +
     rasterize(
       ggplot2::geom_jitter(
@@ -69,7 +71,10 @@ create_plot <- function(data, title, y_scale, y_suffix) {
         width = 0.25
       ), dpi = 300
     ) +
-    ggplot2::geom_violin(linewidth = 0.3, fill = color_white) +
+    ggplot2::geom_violin(
+      linewidth = 0.3,
+      fill = color_white
+    ) +
     ggplot2::stat_summary(
       fun = median,
       geom = "point",
@@ -78,9 +83,7 @@ create_plot <- function(data, title, y_scale, y_suffix) {
       color = color_red
     ) +
     theme_custom() +
-    ggplot2::labs(
-      title = paste(title, " {\\small$(n=", nrow(dplyr::filter(data, type == "participant")), ")$}", sep = "")
-    ) +
+    ggplot2::labs(title = title) +
     ggplot2::scale_y_continuous(
       labels = scales::label_number(scale = y_scale, suffix = y_suffix),
       limits = c(0, NA)
@@ -117,4 +120,3 @@ plot(plot_grid(plotlist = list(
 ), nrow = 3))
 
 dev.off()
-unique(participations$type)

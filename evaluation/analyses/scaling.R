@@ -1,22 +1,41 @@
 # helper function to read scaling experiments data
 read_scaling_experiment <- function(glob) {
-  Sys.glob(file.path("results", glob, "participations.csv")) %>% purrr::map_df(~(function(file) {
-    readr::read_csv(file, show_col_types = FALSE) %>%
-      dplyr::mutate(
-        run = stringr::str_match(file, "/([^/]*)/([^/]*).csv$")[2],
-        experiment = stringr::str_match(file, "/([^/]*)/([^/]*).csv$")[3],
-        workload = strtoi(stringr::str_match(file, "([^-0-9]*)-([0-9]+)/([^/]*).csv$")[3]),
-        participant = .data$participate,
-        participant_size = .data$participate_size,
-        organizer = .data$reward,
-        organizer_size = .data$reward_size,
-      ) %>%
-      tidyr::pivot_longer(
-        c(participant, organizer),
-        names_to = "type",
-        values_to = "time"
-      )
-  })(.)) %>% dplyr::filter(type == "participant" & experiment == "participations")
+  files <- Sys.glob(file.path("results", glob, "participations.csv"))
+  if (length(files) == 0) {
+    tibble(
+      participate = double(),
+      participate_size = double(),
+      confirm = double(),
+      confirm_size = double(),
+      reward = double(),
+      reward_size = double(),
+      run = character(),
+      experiment = character(),
+      workload = integer(),
+      participant_size  = double(),
+      organizer_size = double(),
+      type = character(),
+      time = double()
+    )
+  } else {
+    files %>% purrr::map_dfr(~(function(file) {
+      readr::read_csv(file, show_col_types = FALSE) %>%
+        dplyr::mutate(
+          run = stringr::str_match(file, "/([^/]*)/([^/]*).csv$")[2],
+          experiment = stringr::str_match(file, "/([^/]*)/([^/]*).csv$")[3],
+          workload = strtoi(stringr::str_match(file, "([^-0-9]*)-([0-9]+)/([^/]*).csv$")[3]),
+          participant = .data$participate,
+          participant_size = .data$participate_size,
+          organizer = .data$reward,
+          organizer_size = .data$reward_size,
+        ) %>%
+        tidyr::pivot_longer(
+          c(participant, organizer),
+          names_to = "type",
+          values_to = "time"
+        )
+    })(.)) %>% dplyr::filter(type == "participant" & experiment == "participations")
+  }
 }
 
 # generate qualifier/disqualifier scaling plot
