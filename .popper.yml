@@ -1,7 +1,7 @@
 steps:
 
 - id: measure
-  uses: "docker://ghcr.io/vs-uulm/prepams/evaluation"
+  uses: "docker://ghcr.io/vs-uulm/prepams/evaluation:pets25.1"
   dir: "/workspace"
   env:
     OUTPUT_DIR: "/workspace/evaluation/results"
@@ -10,7 +10,7 @@ steps:
   secrets: ["WORKLOAD_SIZE", "EXPERIMENT"]
 
 - id: additional_devices
-  uses: "docker://ghcr.io/vs-uulm/prepams/backend"
+  uses: "docker://ghcr.io/vs-uulm/prepams/backend:pets25.1"
   dir: "/workspace"
   options:
     ports:
@@ -22,7 +22,7 @@ steps:
   args: ["-c", "cd /prepams/backend; node ../evaluation/serve.js"]
 
 - id: analyze
-  uses: "docker://ghcr.io/vs-uulm/prepams/verse"
+  uses: "docker://ghcr.io/vs-uulm/prepams/verse:pets25.1"
   dir: "/workspace"
   runs: ["sh"]
   args: ["-c", "cd /workspace/evaluation; R --vanilla < /workspace/evaluation/analysis.R && cd results && lualatex scaling.tex && lualatex performance.tex"]
