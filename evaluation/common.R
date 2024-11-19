@@ -20,6 +20,12 @@ color_grey_t <- "#a9a28d66"
 color_green <- "#56aa1c"
 color_orange <- "#df6c07"
 
+if (!dir.exists("results")) {
+  cat("Warning: \"results\" directory not found!\r\n")
+  cat("    Make sure to first execute the measure step.\r\n")
+  cat("\r\n")
+}
+
 theme_custom <- function() {
   theme_cowplot(font_size = base_size) %+replace%
     ggplot2::theme(
