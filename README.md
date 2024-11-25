@@ -78,8 +78,11 @@ To enable it remove the `SKIP_STEP: "REMOVE THIS LINE TO ENABLE THE EVALUATION S
 Alternatively, executing `npm run build` [`evaluation/`](evaluation/) in the evaluation directory compiles a static version of the performance evaluation and outputs it to the `evaluation/dist` directory.
 Then [`evaluation/serve.js`](evaluation/serve.js) can be used to run a simple web server which hosts this static evaluation app, as well as an HTTP-based API to retrieve measurement results from other devices.
 A ready to use version is deployed under [https://prepams.uni-ulm.de/eval/](https://prepams.uni-ulm.de/eval/), ready to evaluate the performance of PrePaMS on any device featuring a modern browser.
+This version features a "Download ZIP Archive" button to download the results as a ZIP archive, which can be extract to the [`./evaluation/results/browser/`](./evaluation/results/browser/) directory.
 
-`popper run analyze` can be used to update the resulting plot `scaling.pdf` with the additional devices.
+`popper run analyze` can be used to update the resulting plot `performance.pdf` with the additional devices.
+
+*Note: The `analyze` step still requires data from the `measure` step to generate the plots, therefore, plots may be partially empty if the `measure` step is skipped. Only the performance experiment data is used to generate the runtime plots. The scaling measurements can be measured on other browsers as well, but are currently not automatically used in the graphical results.*
 
 ## License
 The PrePaMS prototype and related artifacts are licensed under the terms of the [AGPL-3.0 license](./LICENSE.md), unless otherwise noted.
