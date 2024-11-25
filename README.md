@@ -1,9 +1,7 @@
 ![PrePaMS Logo](./prepams.png)
 # PrePaMS: Privacy-preserving Participant Management System
 
-<!--
-[![DOI](https://img.shields.io/badge/doi-10.56553/popets--2025--XXXX-9a7410.svg?logo=doi)](https://doi.org/10.56553/popets-2025-XXXX)
--->
+[![DOI](https://img.shields.io/badge/doi-10.56553/popets--2025--0034-9a7410.svg?logo=doi)](https://doi.org/10.56553/popets-2025-0034)
 [![Preprint](https://img.shields.io/badge/preprint-arXiv:2409.10192-blue.svg?logo=arxiv)](https://arxiv.org/abs/2409.10192)
 [![Licensed under AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-orange.svg)](./LICENSE.md)
 
@@ -11,7 +9,7 @@ This repository contains source code artifacts, experiments, and results associa
 A publicly hosted test deployment can be accessed at https://prepams.uni-ulm.de, where anyone is able to explore our system using any device featuring a modern web browser.
 
 More details about our constructions, prototype, and evaluation can be found in our PETS'25 publication:
-> Echo Meißner, Frank Kargl, Benjamin Erb, Felix Engelmann. 2025. *PrePaMS: Privacy-Preserving Participant Management System for Studies with Rewards and Prerequisites.* In Proceedings on Privacy Enhancing Technologies (2025). <!-- https://doi.org/10.56553/popets-2025-XXXX -->
+> Echo Meißner, Frank Kargl, Benjamin Erb, Felix Engelmann. 2025. *PrePaMS: Privacy-Preserving Participant Management System for Studies with Rewards and Prerequisites.* In Proceedings on Privacy Enhancing Technologies 2025 (1), 632–653. https://doi.org/10.56553/popets-2025-0034
 
 ## Repository Structure
  * [`shared/`](shared) - a rust-based WebAssembly module implementing the PrePaMS protocol.
