@@ -137,7 +137,7 @@
         <strong class="mr-3 ml-1"><a href="https://www.uni-ulm.de/en/in/vs/" target="_blank">Institute of Distributed Systems, Ulm University</a></strong>
         |
         <v-btn text small href="https://github.com/vs-uulm/prepams" target="_blank"><v-icon left>mdi-github</v-icon>GitHub</v-btn>
-        <v-btn text small href="https://github.com/vs-uulm/prepams" target="_blank"><v-icon left>mdi-file-document-outline</v-icon>Publication</v-btn>
+        <v-btn text small href="https://doi.org/10.56553/popets-2025-0034" target="_blank"><v-icon left>mdi-file-document-outline</v-icon>Publication</v-btn>
         <template v-if="FOOTER">
           | <span v-html="FOOTER"></span>
         </template>
