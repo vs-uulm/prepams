@@ -30,9 +30,10 @@ EXPERIMENTS=scaling,performance WORKLOAD_SIZE=PETS25_FULL ./popper run
 
 In the following we provide further details about the individual phases of our evaluation.
 
-Our Popper workflow (see [`.popper.yml`](.popper.yml)) consists of two steps:
+Our Popper workflow (see [`.popper.yml`](.popper.yml)) consists of three steps:
  * `measure` - Uses puppeteer to log the time it takes to execute the synthetic workload of PrePaMS operations.
- * `analyze` - Computes basic statistics on the time data collected in the previous step and generates a box plot.
+ * `additional_devices` - Optional step to benchmark PrePaMS operations on other devices and browsers (disabled by default).
+ * `analyze` - Computes basic statistics on the time data collected in the previous steps and outputs a violin/jitter plot of the protocol performance and a line chart of the median participation protocol execution time with varying prerequisites.
 
 ### Security/Privacy Issues and Ethical Concerns (All badges)
 The provided artifacts should not yield any security or privacy risks for reviewers.
@@ -40,7 +41,7 @@ The provided evaluation script will fetch pre-built docker images from GitHub's 
 Once fetched the execution will not require any network access or connect to remote services.
 Alternatively, the docker images can also be built manually, although this process also requires fetching packages from external repositories.
 
-## Basic Requirements (Only for Functional and Reproduced badges)
+## Basic Requirements
 
 ### Hardware Requirements
 
@@ -82,13 +83,12 @@ All docker PrePaMS docker images take up about 9GB of disk space, although only 
 
 ## Environment 
 
-### Accessibility (All badges)
+### Accessibility
 
 All artifacts are available in a public GitHub repository (https://github.com/vs-uulm/prepams/tree/pets25.1) tagged with `pets25.1`.
 Furthermore, prebuilt docker images are available via the public GitHub container registry.
 
-
-### Set up the environment (Only for Functional and Reproduced badges)
+### Set up the environment
 The repository can be checked out using the following shell command or by downloading a [ZIP-archive from GitHub](https://github.com/vs-uulm/prepams/archive/refs/tags/pets25.1.zip).
 ```bash
 git clone --branch pets25.1 https://github.com/vs-uulm/prepams.git
@@ -102,7 +102,7 @@ To use the helper script, simply replace any call of `popper` with a relative ca
 
 The docker images are typically automatically pulled, when running the evaluation using `popper` or when deploying using `docker compose`.
 
-### Testing the Environment (Only for Functional and Reproduced badges)
+### Testing the Environment
 A minimal functionality test can be executed by running the following command:
 ```bash
 WORKLOAD_SIZE=PETS25_MINIMAL popper run
@@ -113,7 +113,7 @@ When prompted for the `EXPERIMENT`, simply press enter to use the default of run
 This will download the required docker images and execute our evaluation pipeline with a minimal workload.
 The total runtime is less than 2 minutes plus the time it takes to download the docker images from the GitHub Container Registry.
 
-## Artifact Evaluation (Only for Functional and Reproduced badges)
+## Artifact Evaluation
 
 ### Main Results and Claims
 
@@ -221,7 +221,7 @@ evaluation
 
 Running `popper run analyze` afterwards will produce a plot of the collected data and saved as `evaluation/results/scaling.pdf` (see Figure 2).
 
-## Limitations (Only for Functional and Reproduced badges)
+## Limitations
 
 The provided artifacts allow to reproduce all results presented in our paper, although the evaluation with mobile devices requires additional steps as described below and are disabled by default.
 The experiment workflow in the `.popper.yml` file provides an additional step, which starts an evaluation web server and on port `52716`.
@@ -266,10 +266,12 @@ evaluation
                 └── WARMUP_register.csv
 ```
 
+*Note: The `analyze` step still requires data from the `measure` step to generate the plots, therefore, plots may be partially empty if the `measure` step is skipped.*
+
 You can then proceed by running `popper run analyze` to update the generated plots.
 
 *Note: Only the performance experiment data is used to generate the runtime plots. The scaling measurements can be measured on other browsers as well, but are currently not automatically used in the graphical results.*
 
-## Notes on Reusability (Only for Functional and Reproduced badges)
+## Notes on Reusability
 
 Does not apply.
